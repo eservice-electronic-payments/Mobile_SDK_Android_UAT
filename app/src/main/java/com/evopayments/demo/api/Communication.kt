@@ -11,7 +11,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Communication {
 
-    private const val DEFAULT_URL = "https://cashierui-responsivedev.test.myriadpayments.com/ajax/"
+    private const val DEFAULT_URL = "https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/"
     private var tokenUrl = ""
 
     lateinit var apiService: ApiService

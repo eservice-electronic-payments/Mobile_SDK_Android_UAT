@@ -2,9 +2,7 @@ package com.evopayments.demo.api
 
 import com.evopayments.demo.api.model.DemoTokenParameters
 import com.evopayments.demo.api.model.PaymentDataResponse
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 
 /**
@@ -12,9 +10,8 @@ import retrofit2.http.POST
  */
 interface ApiService {
 
-    @POST("tokenJson")
-    @FormUrlEncoded
+    @GET("merchant/initializePayment")
     suspend fun getToken(
-        @FieldMap tokenParams: DemoTokenParameters
+        @QueryMap tokenParams: DemoTokenParameters
     ): PaymentDataResponse
 }
