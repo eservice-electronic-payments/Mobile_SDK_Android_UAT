@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
-            data.cashierUrl,
+            data.mobileCashierUrl,
             data.token,
             myriadFlowId
         )
