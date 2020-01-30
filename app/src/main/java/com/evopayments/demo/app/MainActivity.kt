@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
-    private var merchantId: String = ""
     private lateinit var myriadFlowId: String
     private lateinit var merchantLandingPageUrl: String
     private lateinit var merchantNotificationUrl: String
@@ -37,8 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDefaults() {
         val defaults = DemoTokenParameters()
-        merchantIdEditText.setText(defaults.getMerchantId())
-        passwordEditText.setText(defaults.getPassword())
         customerIdEditText.setText(defaults.getCustomerId())
         currencyEditText.setText(defaults.getCurrency())
         countryEditText.setText(defaults.getCountry())
@@ -53,10 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        this.merchantId = merchantIdEditText.getValue()
         val tokenParams = DemoTokenParameters(
-            merchantId = merchantId,
-            password = passwordEditText.getValue(),
             customerId = customerIdEditText.getValue(),
             currency = currencyEditText.getValue(),
             country = countryEditText.getValue(),
@@ -85,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         val cashierUrl = viewModel.resolveCashierUrl(cashierUrlEditText.getValue())
         startEvoPaymentActivityForResult(
             requestCode = EVO_PAYMENT_REQUEST_CODE,
-            merchantId = "",
             cashierUrl = cashierUrl,
             token = "",
             myriadFlowId = myriadFlowId
@@ -95,7 +88,6 @@ class MainActivity : AppCompatActivity() {
     private fun startPaymentProcess(data: PaymentDataResponse) {
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
-            merchantId,
             data.mobileCashierUrl,
             data.token,
             myriadFlowId
