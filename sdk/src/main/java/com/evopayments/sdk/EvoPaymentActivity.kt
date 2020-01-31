@@ -15,6 +15,7 @@ import com.google.android.gms.wallet.WalletConstants
 
 fun Activity.startEvoPaymentActivityForResult(
     requestCode: Int,
+    merchantId: String,
     cashierUrl: String,
     token: String,
     myriadFlowId: String,
@@ -23,6 +24,7 @@ fun Activity.startEvoPaymentActivityForResult(
     startActivityForResult(
         EvoPaymentActivity.createIntent(
             this,
+            merchantId,
             cashierUrl,
             token,
             myriadFlowId,
@@ -34,6 +36,7 @@ fun Activity.startEvoPaymentActivityForResult(
 
 class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissListener {
 
+    private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID) }
     private val cashierUrl by lazy { intent.getStringExtra(CASHIER_URL) }
     private val token by lazy { intent.getStringExtra(TOKEN) }
     private val myriadFlowId by lazy { intent.getStringExtra(MYRIAD_FLOW_ID) }
@@ -71,6 +74,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
         if (savedInstanceState == null) {
             val dialogFragment = PaymentFragment.newInstance(
+                merchantId,
                 cashierUrl,
                 token,
                 myriadFlowId,
@@ -168,6 +172,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     }
 
     companion object {
+        private const val MERCHANT_ID = "merchant_id"
         private const val CASHIER_URL = "cashier_url"
         private const val TOKEN = "token"
         private const val MYRIAD_FLOW_ID = "myriad_flow_id"
@@ -183,11 +188,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
         internal fun createIntent(
             context: Context,
+            merchantId: String,
             cashierUrl: String,
             token: String,
             myriadFlowId: String,
             timeoutInMs: Long?
         ) = Intent(context, EvoPaymentActivity::class.java).apply {
+            putExtra(MERCHANT_ID, merchantId)
             putExtra(CASHIER_URL, cashierUrl)
             putExtra(TOKEN, token)
             putExtra(MYRIAD_FLOW_ID, myriadFlowId)

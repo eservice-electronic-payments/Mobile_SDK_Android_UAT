@@ -52,7 +52,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
+        this.merchantId = merchantIdEditText.getValue()
         val tokenParams = DemoTokenParameters(
+            merchantId = merchantId,
             customerId = customerIdEditText.getValue(),
             currency = currencyEditText.getValue(),
             country = countryEditText.getValue(),
@@ -89,7 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
-        this.merchantId = merchantIdEditText.getValue()
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
