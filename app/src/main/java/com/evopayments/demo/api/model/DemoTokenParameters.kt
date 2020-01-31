@@ -1,7 +1,6 @@
 package com.evopayments.demo.api.model
 
 class DemoTokenParameters(
-    merchantId: String = "176282",
     customerId: String = "lovelyrita",
     currency: String = "PLN",
     country: String = "PL",
@@ -17,7 +16,6 @@ class DemoTokenParameters(
 ) : HashMap<String, String>() {
 
     init {
-        put(MERCHANT_ID, merchantId)
         put(CUSTOMER_ID, customerId)
         put(CURRENCY, currency)
         put(COUNTRY, country)
@@ -32,7 +30,6 @@ class DemoTokenParameters(
         put(MERCHANT_NOTIFICATION_URL, merchantNotificationUrl)
     }
 
-    fun getMerchantId() = get(MERCHANT_ID)
     fun getCustomerId() = get(CUSTOMER_ID)
 
     fun getCurrency() = get(CURRENCY)
@@ -58,7 +55,6 @@ class DemoTokenParameters(
     fun getCustomerLastName() = get(CUSTOMER_LAST_NAME)
 
     companion object {
-        private const val MERCHANT_ID = "merchantId"
         private const val CUSTOMER_ID = "customerId"
         private const val CURRENCY = "currency"
         private const val COUNTRY = "country"

@@ -8,5 +8,8 @@ data class PaymentDataResponse(
     val mobileCashierUrl: String,
 
     @Json(name = "token")
-    val token: String
+    val token: String,
+
+    @Json(name = "merchantId")
+    val merchantId: String?
 )

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDefaults() {
         val defaults = DemoTokenParameters()
-        merchantIdEditText.setText(defaults.getMerchantId())
+        merchantIdEditText.setText("176282")
         customerIdEditText.setText(defaults.getCustomerId())
         currencyEditText.setText(defaults.getCurrency())
         countryEditText.setText(defaults.getCountry())
@@ -52,9 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        this.merchantId = merchantIdEditText.getValue()
         val tokenParams = DemoTokenParameters(
-            merchantId = merchantId,
             customerId = customerIdEditText.getValue(),
             currency = currencyEditText.getValue(),
             country = countryEditText.getValue(),
@@ -91,6 +89,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
+        this.merchantId = data.merchantId ?: merchantIdEditText.getValue()
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
