@@ -17,7 +17,7 @@
     <string name="redirection_requested">redirection requested</string>
     <string name="close_requested">Closing redir window requested</string>
     <string name="token_url">token provider URL</string>
-    <string name="cashier_url">Cashier URL</string>
+    <string name="mobile_cashier_url">Mobile cashier URL</string>
     <string name="payment_result_undetermined">We could not confirm the result of the transaction. Please contact the
         merchant.
     </string>

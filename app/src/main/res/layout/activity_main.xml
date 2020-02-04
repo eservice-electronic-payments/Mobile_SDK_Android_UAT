@@ -30,20 +30,6 @@
 			/>
 
 		<androidx.appcompat.widget.AppCompatEditText
-			android:id="@+id/merchantIdEditText"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/merchant_id"
-			/>
-
-		<androidx.appcompat.widget.AppCompatEditText
-			android:id="@+id/passwordEditText"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/merchant_password"
-			/>
-
-		<androidx.appcompat.widget.AppCompatEditText
 			android:id="@+id/customerIdEditText"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -128,7 +114,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@android:dimen/app_icon_size"
-			android:hint="@string/cashier_url"
+			android:hint="@string/mobile_cashier_url"
 			/>
 
 	</LinearLayout>

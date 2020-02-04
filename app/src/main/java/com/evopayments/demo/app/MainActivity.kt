@@ -37,8 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDefaults() {
         val defaults = DemoTokenParameters()
-        merchantIdEditText.setText(defaults.getMerchantId())
-        passwordEditText.setText(defaults.getPassword())
         customerIdEditText.setText(defaults.getCustomerId())
         currencyEditText.setText(defaults.getCurrency())
         countryEditText.setText(defaults.getCountry())
@@ -53,10 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        this.merchantId = merchantIdEditText.getValue()
         val tokenParams = DemoTokenParameters(
-            merchantId = merchantId,
-            password = passwordEditText.getValue(),
             customerId = customerIdEditText.getValue(),
             currency = currencyEditText.getValue(),
             country = countryEditText.getValue(),
@@ -82,21 +77,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRawWebDemo() {
-        val cashierUrl = viewModel.resolveCashierUrl(cashierUrlEditText.getValue())
+        val cashierUrl = viewModel.resolveMobileCashierUrl(cashierUrlEditText.getValue())
         startEvoPaymentActivityForResult(
             requestCode = EVO_PAYMENT_REQUEST_CODE,
             merchantId = "",
-            cashierUrl = cashierUrl,
+            mobileCashierUrl = cashierUrl,
             token = "",
             myriadFlowId = myriadFlowId
         )
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
+        this.merchantId = data.merchantId!!
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
-            data.cashierUrl,
+            data.mobileCashierUrl,
             data.token,
             myriadFlowId
         )
