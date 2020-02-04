@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDefaults() {
         val defaults = DemoTokenParameters()
-        merchantIdEditText.setText("176282")
         customerIdEditText.setText(defaults.getCustomerId())
         currencyEditText.setText(defaults.getCurrency())
         countryEditText.setText(defaults.getCountry())
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRawWebDemo() {
-        val cashierUrl= viewModel.resolveMobileCashierUrl(cashierUrlEditText.getValue())
+        val cashierUrl = viewModel.resolveMobileCashierUrl(cashierUrlEditText.getValue())
         startEvoPaymentActivityForResult(
             requestCode = EVO_PAYMENT_REQUEST_CODE,
             merchantId = "",
@@ -89,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
-        this.merchantId = data.merchantId ?: merchantIdEditText.getValue()
+        this.merchantId = data.merchantId!!
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
