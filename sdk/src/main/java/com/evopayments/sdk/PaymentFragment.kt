@@ -195,14 +195,14 @@ class PaymentFragment : Fragment(), RedirectCallback {
 
         fun newInstance(
             merchantId: String,
-            cashierUrl: String,
+            mobileCashierUrl: String,
             token: String,
             myriadFlowId: String,
             timeoutInMs: Long = DEFAULT_TIMEOUT
         ) = PaymentFragment().apply {
             arguments = Bundle().apply {
                 putString(EXTRA_MERCHANT_ID, merchantId)
-                putString(EXTRA_URL, cashierUrl)
+                putString(EXTRA_URL, mobileCashierUrl)
                 putString(EXTRA_TOKEN, token)
                 putString(MYRIAD_FLOW_ID, myriadFlowId)
                 putLong(EXTRA_TIMEOUT_IN_MS, timeoutInMs)

@@ -48,8 +48,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun resolveCashierUrl(customUrl: String): String {
-        return if (customUrl.isBlank()) TEST_CASHIER_URL else customUrl
+    fun resolveMobileCashierUrl(customUrl: String): String {
+        return if (customUrl.isBlank()) TEST_MOBILE_CASHIER_URL else customUrl
     }
 
     fun generateFlowId(): String {
@@ -58,7 +58,7 @@ class MainViewModel : ViewModel() {
     }
 
     companion object {
-        const val TEST_CASHIER_URL =
+        const val TEST_MOBILE_CASHIER_URL =
             "https://cashierui-responsivedev.test.myriadpayments.com/react-frontend/index.html"
         private val TAG = MainViewModel::class.java.simpleName
     }

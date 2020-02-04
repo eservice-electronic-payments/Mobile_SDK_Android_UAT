@@ -78,11 +78,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRawWebDemo() {
-        val cashierUrl = viewModel.resolveCashierUrl(cashierUrlEditText.getValue())
+        val cashierUrl= viewModel.resolveMobileCashierUrl(cashierUrlEditText.getValue())
         startEvoPaymentActivityForResult(
             requestCode = EVO_PAYMENT_REQUEST_CODE,
             merchantId = "",
-            cashierUrl = cashierUrl,
+            mobileCashierUrl = cashierUrl,
             token = "",
             myriadFlowId = myriadFlowId
         )

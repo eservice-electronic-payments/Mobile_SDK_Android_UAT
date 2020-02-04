@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.evopayments.evocashierlib.BuildConfig
-import com.evopayments.evocashierlib.R
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.Wallet
@@ -16,7 +15,7 @@ import com.google.android.gms.wallet.WalletConstants
 fun Activity.startEvoPaymentActivityForResult(
     requestCode: Int,
     merchantId: String,
-    cashierUrl: String,
+    mobileCashierUrl: String,
     token: String,
     myriadFlowId: String,
     timeoutInMs: Long? = null
@@ -25,7 +24,7 @@ fun Activity.startEvoPaymentActivityForResult(
         EvoPaymentActivity.createIntent(
             this,
             merchantId,
-            cashierUrl,
+            mobileCashierUrl,
             token,
             myriadFlowId,
             timeoutInMs
@@ -37,7 +36,7 @@ fun Activity.startEvoPaymentActivityForResult(
 class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissListener {
 
     private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID) }
-    private val cashierUrl by lazy { intent.getStringExtra(CASHIER_URL) }
+    private val mobileCashierUrl by lazy { intent.getStringExtra(MOBILE_CASHIER_URL) }
     private val token by lazy { intent.getStringExtra(TOKEN) }
     private val myriadFlowId by lazy { intent.getStringExtra(MYRIAD_FLOW_ID) }
     private val timeoutInMs by lazy {
@@ -75,7 +74,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         if (savedInstanceState == null) {
             val dialogFragment = PaymentFragment.newInstance(
                 merchantId,
-                cashierUrl,
+                mobileCashierUrl,
                 token,
                 myriadFlowId,
                 timeoutInMs
@@ -173,7 +172,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
     companion object {
         private const val MERCHANT_ID = "merchant_id"
-        private const val CASHIER_URL = "cashier_url"
+        private const val MOBILE_CASHIER_URL = "mobile_cashier_url"
         private const val TOKEN = "token"
         private const val MYRIAD_FLOW_ID = "myriad_flow_id"
         private const val TIMEOUT_IN_MS = "timeout_in_ms"
@@ -189,13 +188,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         internal fun createIntent(
             context: Context,
             merchantId: String,
-            cashierUrl: String,
+            mobileCashierUrl: String,
             token: String,
             myriadFlowId: String,
             timeoutInMs: Long?
         ) = Intent(context, EvoPaymentActivity::class.java).apply {
             putExtra(MERCHANT_ID, merchantId)
-            putExtra(CASHIER_URL, cashierUrl)
+            putExtra(MOBILE_CASHIER_URL, mobileCashierUrl)
             putExtra(TOKEN, token)
             putExtra(MYRIAD_FLOW_ID, myriadFlowId)
             putExtra(TIMEOUT_IN_MS, timeoutInMs)

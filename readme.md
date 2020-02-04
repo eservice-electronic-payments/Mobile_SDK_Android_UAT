@@ -26,7 +26,7 @@ In case of update, just replace `<latest_version>` with the newer one.
 
 ## Usage
 
-1. To use Android SDK it's necessary to fetch cashier url and token from API:
+1. To use Android SDK it's necessary to fetch mobile cashier url and token from API:
 ​
 In our example, in repository we use `Communication.kt` to obtain session token.
 Below is a Payload model used in request:
@@ -62,7 +62,7 @@ class YourActivity: Activity() {
         startEvoPaymentActivityForResult(
         	EVO_PAYMENT_REQUEST_CODE,
 	        merchantId,
-	        cashierUrl,
+	        mobileCashierUrl,
 	        token,
 	        myriadFlowId
         )
@@ -77,7 +77,7 @@ public class YourActivity extends Activity {
             this, //Activity
             EVO_PAYMENT_REQUEST_CODE,
             merchantId,
-            cashierUrl,
+            mobileCashierUrl,
             token,
             myriadFlowId
         );
