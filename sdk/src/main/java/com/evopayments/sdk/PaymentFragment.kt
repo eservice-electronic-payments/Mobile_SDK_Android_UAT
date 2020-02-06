@@ -110,10 +110,10 @@ class PaymentFragment : Fragment(), RedirectCallback {
         private val handler = Handler(Looper.getMainLooper())
 
         @JavascriptInterface
-        fun processGPayPayment(paymentDataRequest: String) {
+        fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
             if (request != null) {
-                paymentCallback.handleGPayRequest(request)
+                paymentCallback.handleGPayRequest(request, environment)
             }
         }
 

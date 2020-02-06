@@ -6,11 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.evopayments.evocashierlib.BuildConfig
-import com.google.android.gms.wallet.AutoResolveHelper
-import com.google.android.gms.wallet.PaymentDataRequest
-import com.google.android.gms.wallet.Wallet
-import com.google.android.gms.wallet.WalletConstants
+import com.google.android.gms.wallet.*
 
 fun Activity.startEvoPaymentActivityForResult(
     requestCode: Int,
@@ -48,15 +44,8 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
     private var isPaymentStarted: Boolean = false
 
-    private val environment by lazy {
-        if (BuildConfig.DEBUG) {
-            WalletConstants.ENVIRONMENT_TEST
-        } else {
-            WalletConstants.ENVIRONMENT_PRODUCTION
-        }
-    }
-    private val paymentsClient by lazy {
-        Wallet.getPaymentsClient(
+    private fun getPaymentClient(environment: Int): PaymentsClient {
+        return Wallet.getPaymentsClient(
             this,
             Wallet.WalletOptions.Builder()
                 .setEnvironment(environment)
@@ -87,6 +76,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
                 .commit()
         }
     }
+
     override fun onPaymentStarted() {
         isPaymentStarted = true
     }
@@ -116,13 +106,21 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         finishWithResult(PAYMENT_SESSION_EXPIRED)
     }
 
-    override fun handleGPayRequest(request: PaymentDataRequest) {
+    override fun handleGPayRequest(request: PaymentDataRequest, environment: String) {
+        val gPayEnvironment = parseEnvironment(environment)
         AutoResolveHelper.resolveTask(
-            paymentsClient.loadPaymentData(request),
+            getPaymentClient(gPayEnvironment).loadPaymentData(request),
             this,
             LOAD_PAYMENT_DATA_REQUEST_CODE
         )
     }
+
+    private fun parseEnvironment(environment: String) =
+        if (environment.equals("test", true)) {
+            WalletConstants.ENVIRONMENT_TEST
+        } else {
+            WalletConstants.ENVIRONMENT_PRODUCTION
+        }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
