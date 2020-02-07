@@ -33,8 +33,6 @@ Below is a Payload model used in request:
 ​
 ```kotlin
 class DemoTokenParameters(  //example values
-    merchantId: String,     //"176282"
-    password: String,       //"12345"
     customerId: String,     //"lovelyrita"
     currency: String,       //"PLN"
     country: String,        //"PL"
