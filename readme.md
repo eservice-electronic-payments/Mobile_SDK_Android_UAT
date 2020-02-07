@@ -33,8 +33,6 @@ Below is a Payload model used in request:
 ​
 ```kotlin
 class DemoTokenParameters(  //example values
-    merchantId: String,     //"176282"
-    password: String,       //"12345"
     customerId: String,     //"lovelyrita"
     currency: String,       //"PLN"
     country: String,        //"PL"
@@ -55,6 +53,7 @@ For more information check `fetchToken()` method in `MainActivity.kt`.
 
 2. Then to display web page via SDK, call this method from your activity:
 ​
+
 **Kotlin**
 ```kotlin
 class YourActivity: Activity() {
@@ -98,6 +97,7 @@ PAYMENT_SESSION_EXPIRED = 5
 ​
 Sample implementation of `onActivityResult(...)` can looks like this:
 ​
+
 **Kotlin**
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

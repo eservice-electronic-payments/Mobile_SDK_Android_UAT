@@ -14,7 +14,7 @@ interface EvoPaymentsCallback {
 
     fun onPaymentUndetermined()
 
-    fun handleGPayRequest(request: PaymentDataRequest)
+    fun handleGPayRequest(request: PaymentDataRequest, environment: GooglePayEnvironment)
 
     fun onSessionExpired() = Unit
 }

@@ -109,11 +109,15 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
 
+        /**
+         * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`
+         */
         @JavascriptInterface
-        fun processGPayPayment(paymentDataRequest: String) {
+        fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
+            val gPayEnvironment = GooglePayEnvironment.valueOf(environment)
             if (request != null) {
-                paymentCallback.handleGPayRequest(request)
+                paymentCallback.handleGPayRequest(request, gPayEnvironment)
             }
         }
 
