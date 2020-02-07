@@ -115,7 +115,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         @JavascriptInterface
         fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
-            val gPayEnvironment = GPayEnvironment.valueOf(environment)
+            val gPayEnvironment = GooglePayEnvironment.valueOf(environment)
             if (request != null) {
                 paymentCallback.handleGPayRequest(request, gPayEnvironment)
             }

@@ -106,20 +106,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         finishWithResult(PAYMENT_SESSION_EXPIRED)
     }
 
-    override fun handleGPayRequest(request: PaymentDataRequest, environment: GPayEnvironment) {
+    override fun handleGPayRequest(request: PaymentDataRequest, environment: GooglePayEnvironment) {
         AutoResolveHelper.resolveTask(
             getPaymentClient(environment.code).loadPaymentData(request),
             this,
             LOAD_PAYMENT_DATA_REQUEST_CODE
         )
     }
-
-    private fun parseEnvironment(environment: String) =
-        if (environment.equals("test", true)) {
-            WalletConstants.ENVIRONMENT_TEST
-        } else {
-            WalletConstants.ENVIRONMENT_PRODUCTION
-        }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
