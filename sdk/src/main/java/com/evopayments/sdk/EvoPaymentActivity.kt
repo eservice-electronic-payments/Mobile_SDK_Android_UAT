@@ -106,10 +106,9 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         finishWithResult(PAYMENT_SESSION_EXPIRED)
     }
 
-    override fun handleGPayRequest(request: PaymentDataRequest, environment: String) {
-        val gPayEnvironment = parseEnvironment(environment)
+    override fun handleGPayRequest(request: PaymentDataRequest, environment: GPayEnvironment) {
         AutoResolveHelper.resolveTask(
-            getPaymentClient(gPayEnvironment).loadPaymentData(request),
+            getPaymentClient(environment.code).loadPaymentData(request),
             this,
             LOAD_PAYMENT_DATA_REQUEST_CODE
         )
