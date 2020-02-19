@@ -1,7 +1,7 @@
 ## Installation
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
-![Download Button]()
+![Download Button](https://github.com/intelligentpayments/androidSDK/blob/develop_source_code_distribution_readme/readMeImages/cloneOrDownload.PNG)
 
 2. If zip file was downloaded, extract it and remember location.
 3. Open your project in Android Studio.
