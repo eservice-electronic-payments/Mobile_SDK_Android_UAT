@@ -1,7 +1,7 @@
 ## Installation
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
-![Download Button](https://github.com/intelligentpayments/androidSDK/blob/master/readMeImages/cloneOrDownload.PNG)
+![Download Button](readMeImages/cloneOrDownload.PNG)
 
 2. If zip file was downloaded, extract it.
 3. Open extracted or cloned folder, and run command in terminal:
