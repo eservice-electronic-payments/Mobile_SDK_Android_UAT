@@ -3,10 +3,17 @@
 
 ![Download Button](https://github.com/intelligentpayments/androidSDK/blob/develop_source_code_distribution_readme/readMeImages/cloneOrDownload.PNG)
 
-2. If zip file was downloaded, extract it and remember location.
-3. Open your project in Android Studio.
-4. Open file `settings.gradle` - it is in your project's root directory
-5. Add these lines in file:
+2. If zip file was downloaded, extract it.
+3. Open extracted or cloned folder, and run command in terminal:
+```
+git checkout <version>
+```
+Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`
+All available version you can find [here](https://github.com/intelligentpayments/androidSDK/releases)
+
+4. Open your project in Android Studio.
+5. Open file `settings.gradle` - it is in your project's root directory
+6. Add these lines in file:
 
 ```groovy
 include ':sdk'
@@ -15,7 +22,7 @@ project(':sdk').projectDir = new File('C:\\Users\\Praca\\StudioProjects\\android
 Replace path in `new File(...)` with path to cloned/downloaded SDK.
 Remember, path must pointing to `sdk` folder inside cloned SDK.
 
-6. In app-level build.gradle file add the dependency​:
+7. In app-level build.gradle file add the dependency​:
 ```groovy
 implementation project(":sdk")
 ```
