@@ -12,7 +12,7 @@ allprojects {
 ​
 ```groovy
 dependencies {
-    implementation 'com.github.eservice-electronic-payments:androidSDK:<latest_version>'
+    implementation 'com.github.eservice-electronic-payments:android_sdk:<latest_version>'
 }
 ```
 [![JitPack](https://img.shields.io/jitpack/v/github/intelligentpayments/androidSDK?color=brightgreen&label=JitPack&style=plastic)](https://jitpack.io/#intelligentpayments/androidSDK)
