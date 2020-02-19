@@ -1,14 +1,14 @@
 ## Installation
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
-![Download Button](https://github.com/intelligentpayments/androidSDK/blob/develop_source_code_distribution_readme/readMeImages/cloneOrDownload.PNG)
+![Download Button](https://github.com/intelligentpayments/androidSDK/blob/master/readMeImages/cloneOrDownload.PNG)
 
 2. If zip file was downloaded, extract it.
 3. Open extracted or cloned folder, and run command in terminal:
 ```
 git checkout <version>
 ```
-Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`
+Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`.
 All available version you can find [here](https://github.com/intelligentpayments/androidSDK/releases)
 
 4. Open your project in Android Studio.
