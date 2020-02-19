@@ -1,28 +1,24 @@
 ## Installation
-1. In project-level build.gradle file add jitpack repository to your project path
-```groovy
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
+1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
-2. In module-level build.gradle file add the dependency
-​
-```groovy
-dependencies {
-    implementation 'com.github.eservice-electronic-payments:android_sdk:<latest_version>'
-}
-```
-[![JitPack](https://img.shields.io/jitpack/v/github/intelligentpayments/androidSDK?color=brightgreen&label=JitPack&style=plastic)](https://jitpack.io/#intelligentpayments/androidSDK)
-​
+![Download Button]()
 
-Replace `<latest_version>` with latest library version from  JitPack
-​
-### Update
-​
-In case of update, just replace `<latest_version>` with the newer one.
+2. If zip file was downloaded, extract it and remember location.
+3. Open your project in Android Studio.
+4. Open file `settings.gradle` - it is in your project's root directory
+5. Add these lines in file:
+
+```groovy
+include ':sdk'
+project(':sdk').projectDir = new File('C:\\Users\\Praca\\StudioProjects\\androidSDK\\sdk') // Example path
+```
+Replace path in `new File(...)` with path to cloned/downloaded SDK.
+Remember, path must pointing to `sdk` folder inside cloned SDK.
+
+6. In app-level build.gradle file add the dependency​:
+```groovy
+implementation project(":sdk")
+```
 
 ## Usage
 
