@@ -2,7 +2,9 @@ package com.evopayments.demo.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView.setWebContentsDebuggingEnabled
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         setDefaults()
         myriadFlowId = viewModel.generateFlowId()
         setWebContentsDebuggingEnabled(true)
+        val entries = resources.getStringArray(R.array.actions)
+        actionSpinner.onItemSelectedListener = SpinnerListener(entries, amountEditText)
     }
 
     private fun setDefaults() {
