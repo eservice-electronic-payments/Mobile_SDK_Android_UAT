@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         val myriadFlowId = arguments!!.getString(MYRIAD_FLOW_ID)!!
 
         val url = createUrl(baseUrl, merchantId, token, myriadFlowId)
+        Log.i("DEBUG_TAG", url)
         webView.loadUrl(url)
     }
 

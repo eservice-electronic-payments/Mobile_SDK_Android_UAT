@@ -78,6 +78,13 @@
 			android:hint="@string/customer_last_name"
 			/>
 
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customParameter1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="Custom param 1"
+			/>
+
 		<Button
 			android:id="@+id/startPaymentButton"
 			android:layout_width="match_parent"
