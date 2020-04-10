@@ -12,7 +12,8 @@ class DemoTokenParameters(
     myriadFlowId: String = "",
     customerFirstName: String = "Jan",
     customerLastName: String = "Mobile",
-    merchantNotificationUrl: String = "https://ptsv2.com/t/66i1s-1534805666/post"
+    merchantNotificationUrl: String = "https://ptsv2.com/t/66i1s-1534805666/post",
+    customParams: CustomParams = CustomParams()
 ) : HashMap<String, String>() {
 
     init {
@@ -28,6 +29,7 @@ class DemoTokenParameters(
         put(CUSTOMER_FIRST_NAME, customerFirstName)
         put(CUSTOMER_LAST_NAME, customerLastName)
         put(MERCHANT_NOTIFICATION_URL, merchantNotificationUrl)
+        putAll(customParams.hashMap)
     }
 
     fun getCustomerId() = get(CUSTOMER_ID)

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.evopayments.demo.R
 import com.evopayments.demo.api.Communication
+import com.evopayments.demo.api.model.CustomParams
 import com.evopayments.demo.api.model.DemoTokenParameters
 import com.evopayments.demo.api.model.PaymentDataResponse
 import com.evopayments.sdk.EvoPaymentActivity
@@ -51,6 +52,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
+        val customParams = CustomParams(
+            "Custom Param Value 1",
+            "Custom Param Value 2",
+            "Custom Param Value 3",
+            "Custom Param Value 4")
+
         val tokenParams = DemoTokenParameters(
             customerId = customerIdEditText.getValue(),
             currency = currencyEditText.getValue(),
@@ -62,8 +69,10 @@ class MainActivity : AppCompatActivity() {
             myriadFlowId = myriadFlowId,
             customerFirstName = customerFirstNameEditText.getValue(),
             customerLastName = customerLastNameEditText.getValue(),
-            merchantNotificationUrl = merchantNotificationUrl
+            merchantNotificationUrl = merchantNotificationUrl,
+            customParams = customParams
         )
+
         viewModel.fetchToken(
             tokenUrlEditText.getValue(),
             tokenParams,
