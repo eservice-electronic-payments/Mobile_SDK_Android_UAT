@@ -29,8 +29,6 @@ class DemoTokenParameters(
         put(CUSTOMER_FIRST_NAME, customerFirstName)
         put(CUSTOMER_LAST_NAME, customerLastName)
         put(MERCHANT_NOTIFICATION_URL, merchantNotificationUrl)
-        //TODO Only for test purposes
-        put("CustomParameter10Or", "cp10")
         putAll(customParams.hashMap)
     }
 

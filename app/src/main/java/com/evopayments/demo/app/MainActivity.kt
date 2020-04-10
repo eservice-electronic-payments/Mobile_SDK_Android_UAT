@@ -52,8 +52,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchToken() {
-        val param1 = customParameter1.getValue()
-        val customParams = CustomParams(param1, "MobileSDK | | | ; ; ; ", "!@#\$%^&*()_+{}  :?><;'][", "ćuśtóm-pąramż-for-auth-and-capture-testing-04")
+        val customParams = CustomParams(
+            "Custom Param Value 1",
+            "Custom Param Value 2",
+            "Custom Param Value 3",
+            "Custom Param Value 4")
 
         val tokenParams = DemoTokenParameters(
             customerId = customerIdEditText.getValue(),
