@@ -88,14 +88,6 @@
 			android:text="@string/start_demo"
 			/>
 
-		<Button
-			android:id="@+id/showTestButton"
-			android:layout_width="match_parent"
-			android:layout_height="80dp"
-			android:layout_gravity="center"
-			android:text="@string/show_test"
-			/>
-
 		<androidx.appcompat.widget.AppCompatEditText
 			android:id="@+id/tokenUrlEditText"
 			android:layout_width="match_parent"

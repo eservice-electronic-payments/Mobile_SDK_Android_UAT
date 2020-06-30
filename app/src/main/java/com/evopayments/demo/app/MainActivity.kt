@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         myriadFlowId = viewModel.generateFlowId()
         startPaymentButton.setOnClickListener { fetchToken() }
-        showTestButton.setOnClickListener { showRawWebDemo() }
         setDefaults()
         myriadFlowId = viewModel.generateFlowId()
         setWebContentsDebuggingEnabled(true)
@@ -87,17 +86,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun EditText.getValue(): String {
         return text.toString()
-    }
-
-    private fun showRawWebDemo() {
-        val cashierUrl = viewModel.resolveMobileCashierUrl(cashierUrlEditText.getValue())
-        startEvoPaymentActivityForResult(
-            requestCode = EVO_PAYMENT_REQUEST_CODE,
-            merchantId = "",
-            mobileCashierUrl = cashierUrl,
-            token = "",
-            myriadFlowId = myriadFlowId
-        )
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
