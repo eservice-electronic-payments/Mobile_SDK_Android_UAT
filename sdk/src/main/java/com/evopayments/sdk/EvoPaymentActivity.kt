@@ -4,9 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.wallet.*
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.android.gms.wallet.PaymentDataRequest
+import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.Wallet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun Activity.startEvoPaymentActivityForResult(
     requestCode: Int,
@@ -29,7 +36,11 @@ fun Activity.startEvoPaymentActivityForResult(
     )
 }
 
+//class MainViewModel : ViewModel()
+
 class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissListener {
+
+//    private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
     private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID) }
     private val mobileCashierUrl by lazy { intent.getStringExtra(MOBILE_CASHIER_URL) }
@@ -112,6 +123,23 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
             this,
             LOAD_PAYMENT_DATA_REQUEST_CODE
         )
+    }
+
+    override fun initialize3ds2Engine(initParams: ThreeDS2ChallengeRequestParams) {
+        lifecycleScope.launch(context = Dispatchers.Default) { // todo: "when started" ?
+            try {
+                val context = this@EvoPaymentActivity
+                val transaction = ThreeDS2ChallengeRequestor.initialize(context, initParams)
+                val transactionData = transaction.authenticationRequestParameters
+                val paymentFragment = supportFragmentManager
+                    .findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+                runOnUiThread {
+                    paymentFragment.provideReactWithTransactionData(transactionData)
+                }
+            } catch (ex: Exception) {
+                Log.e("initialize3ds2Engine", "initialize3ds2Engine", ex)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,11 @@ import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
 import com.evopayments.sdk.redirect.WebDialogFragment
 import com.google.android.gms.wallet.PaymentDataRequest
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.concurrent.TimeUnit
+import com.nsoftware.ipworks3ds.sdk.AuthenticationRequestParameters
 
 class PaymentFragment : Fragment(), RedirectCallback {
 
@@ -31,6 +36,9 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private val timeoutInMs by lazy { arguments!!.getLong(EXTRA_TIMEOUT_IN_MS) }
     private val handler by lazy { Handler() }
     private val sessionExpiredRunnable by lazy { Runnable(this::onSessionExpired) }
+
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private val jsonAdapter = moshi.adapter(PaymentRequest::class.java)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -103,15 +111,61 @@ class PaymentFragment : Fragment(), RedirectCallback {
     }
 
     private fun sendTokenToWebView(token: String) {
-        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
+//        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
+        callMethodOnWebView("onGPayTokenReceived", token)
+    }
+
+    private fun callMethodOnWebView(methodName: String, parameter: String, returnType: Class<*>? = null) {
+        webView.evaluateJavascript("window.JSInterface.$methodName($parameter);") { response ->
+            Log.d(TAG, response)
+            if (returnType != null) {
+                val jsonAdapter = moshi.adapter(returnType)
+                try {
+                    Log.d(TAG, jsonAdapter.fromJson(response).toString())
+                } catch (ex: JsonDataException) {
+                    Log.e(TAG, "", ex)
+                }
+            }
+        }
+    }
+
+    private fun callMethodOnWebViewAlty(methodName: String, parameter: String, returnType: Class<*>? = null) {
+        webView.evaluateJavascript("(function() { return window.JSInterface.$methodName($parameter); })();") { response ->
+            Log.d(TAG, response)
+            if (returnType != null) {
+                val jsonAdapter = moshi.adapter(returnType).lenient()
+                try {
+                    Log.d(TAG, jsonAdapter.fromJson(response).toString())
+                } catch (ex: JsonDataException) {
+                    Log.e(TAG, "", ex)
+                }
+            }
+        }
+    }
+
+    fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
+        val paymentRequest = PaymentRequest(
+            transactionId = transactionData.sdkTransactionID,
+            deviceData = transactionData.deviceData,
+            publicKey = transactionData.sdkEphemeralPublicKey,
+            appId = transactionData.sdkAppID,
+            referenceNumber = transactionData.sdkReferenceNumber
+        )
+        val paymentRequestJson = jsonAdapter.toJson(paymentRequest)
+        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson');") {}
+    }
+
+    fun on3ds2ChallengeSuccess() {
+        // TODO: call a JS method on the WebView
     }
 
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
+        private val jsonAdapter = moshi.adapter(ThreeDS2ChallengeRequestParams::class.java)
 
         /**
          * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`
-         */
+        */
         @JavascriptInterface
         fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
@@ -119,6 +173,34 @@ class PaymentFragment : Fragment(), RedirectCallback {
             if (request != null) {
                 paymentCallback.handleGPayRequest(request, gPayEnvironment)
             }
+        }
+
+        @JavascriptInterface
+        fun process3ds2ChallengeRequest(challengeParams: String) {
+            // TODO: correct the ^ callback's name ^ once it's determined by the backend devs
+            val paramsObject = jsonAdapter.fromJson(challengeParams)
+            if (paramsObject != null) {
+                paymentCallback.handle3ds2ChallengeRequest(paramsObject)
+            }
+        }
+
+        @JavascriptInterface
+        fun sendNSoftSdkConfigToMobileApp(data: String) {
+            Log.d("chromium", "sendNSoftSdkConfigToMobileApp")
+            val paramsObject = jsonAdapter.fromJson(data)
+            if (paramsObject != null) {
+                paymentCallback.initialize3ds2Engine(paramsObject)
+            }
+        }
+
+        @JavascriptInterface
+        fun execute3DS2(data: String) {
+            Log.d("chromium", "execute3ds")
+        }
+
+        @JavascriptInterface
+        fun finalize3DS2Payment(data: String) {
+            Log.d("chromium", "finalize3DS2Payment")
         }
 
         @JavascriptInterface

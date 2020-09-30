@@ -15,10 +15,11 @@ internal object WebViewFactory {
 
     fun createWebView(context: Context, jsInterface: Any?, onError: () -> Unit): WebView {
         return WebView(context).apply {
+            settings.javaScriptEnabled = true
             jsInterface?.let {
                 addJavascriptInterface(it, it.javaClass.simpleName)
             }
-            settings.javaScriptEnabled = true
+            WebView.setWebContentsDebuggingEnabled(true)
 
             webViewClient = PaymentWebViewClient(onError)
         }

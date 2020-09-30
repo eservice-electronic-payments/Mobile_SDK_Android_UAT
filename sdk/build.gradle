@@ -1,6 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 afterEvaluate {
     generateReleaseBuildConfig.enabled = false
@@ -19,6 +26,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -31,4 +42,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wallet:18.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.activity:activity-ktx:1.1.0'
+    // Moshi
+    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
+
+    implementation(name: 'ipworks3ds_sdk', ext: 'aar')
 }
