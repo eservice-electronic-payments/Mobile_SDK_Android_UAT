@@ -125,6 +125,10 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         )
     }
 
+    override fun handle3ds2ChallengeRequest(challengeParams: ThreeDS2ChallengeRequestParams) {
+        // TODO: method probably no longer needed? delete from here and from the class interface?
+    }
+
     override fun initialize3ds2Engine(initParams: ThreeDS2ChallengeRequestParams) {
         lifecycleScope.launch(context = Dispatchers.Default) { // todo: "when started" ?
             try {
