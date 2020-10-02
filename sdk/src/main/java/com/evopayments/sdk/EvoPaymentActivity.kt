@@ -36,11 +36,7 @@ fun Activity.startEvoPaymentActivityForResult(
     )
 }
 
-//class MainViewModel : ViewModel()
-
 class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissListener {
-
-//    private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
     private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID) }
     private val mobileCashierUrl by lazy { intent.getStringExtra(MOBILE_CASHIER_URL) }
@@ -125,18 +121,15 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         )
     }
 
-    override fun handle3ds2ChallengeRequest(challengeParams: ThreeDS2ChallengeRequestParams) {
-        // TODO: method probably no longer needed? delete from here and from the class interface?
-    }
-
-    override fun initialize3ds2Engine(initParams: ThreeDS2ChallengeRequestParams) {
+    override fun initialize3ds2Engine(initParams: ThreeDS2InitializationParams) {
         lifecycleScope.launch(context = Dispatchers.Default) { // todo: "when started" ?
+            val context = this@EvoPaymentActivity
             try {
-                val context = this@EvoPaymentActivity
-                val transaction = ThreeDS2ChallengeRequestor.initialize(context, initParams)
+                ThreeDS2ChallengeRequestor.initialize(context, initParams)
+                val transaction = ThreeDS2ChallengeRequestor.transaction
+                checkNotNull(transaction)
                 val transactionData = transaction.authenticationRequestParameters
-                val paymentFragment = supportFragmentManager
-                    .findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+                val paymentFragment = getPaymentFragment()
                 runOnUiThread {
                     paymentFragment.provideReactWithTransactionData(transactionData)
                 }
@@ -144,6 +137,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
                 Log.e("initialize3ds2Engine", "initialize3ds2Engine", ex)
             }
         }
+    }
+
+    private fun getPaymentFragment(): PaymentFragment =
+        supportFragmentManager.findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+
+    override fun start3ds2Challenge(challengeParams: ThreeDS2ChallengeParams) {
+        // TODO
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -162,8 +162,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     }
 
     private fun onGooglePaymentSuccess(data: Intent?) {
-        val fragment = supportFragmentManager
-            .findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+        val fragment = getPaymentFragment()
         fragment.onGooglePaymentSuccess(data)
     }
 

@@ -16,9 +16,9 @@ interface EvoPaymentsCallback {
 
     fun handleGPayRequest(request: PaymentDataRequest, environment: GooglePayEnvironment)
 
-    fun handle3ds2ChallengeRequest(challengeParams: ThreeDS2ChallengeRequestParams)
+    fun initialize3ds2Engine(initParams: ThreeDS2InitializationParams)
 
-    fun initialize3ds2Engine(initParams: ThreeDS2ChallengeRequestParams)
+    fun start3ds2Challenge(challengeParams: ThreeDS2ChallengeParams)
 
     fun onSessionExpired() = Unit
 }

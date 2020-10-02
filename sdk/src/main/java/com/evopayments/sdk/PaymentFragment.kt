@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
 import com.evopayments.sdk.redirect.WebDialogFragment
 import com.google.android.gms.wallet.PaymentDataRequest
-import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.concurrent.TimeUnit
@@ -111,36 +110,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
     }
 
     private fun sendTokenToWebView(token: String) {
-//        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
-        callMethodOnWebView("onGPayTokenReceived", token)
-    }
-
-    private fun callMethodOnWebView(methodName: String, parameter: String, returnType: Class<*>? = null) {
-        webView.evaluateJavascript("window.JSInterface.$methodName($parameter);") { response ->
-            Log.d(TAG, response)
-            if (returnType != null) {
-                val jsonAdapter = moshi.adapter(returnType)
-                try {
-                    Log.d(TAG, jsonAdapter.fromJson(response).toString())
-                } catch (ex: JsonDataException) {
-                    Log.e(TAG, "", ex)
-                }
-            }
-        }
-    }
-
-    private fun callMethodOnWebViewAlty(methodName: String, parameter: String, returnType: Class<*>? = null) {
-        webView.evaluateJavascript("(function() { return window.JSInterface.$methodName($parameter); })();") { response ->
-            Log.d(TAG, response)
-            if (returnType != null) {
-                val jsonAdapter = moshi.adapter(returnType).lenient()
-                try {
-                    Log.d(TAG, jsonAdapter.fromJson(response).toString())
-                } catch (ex: JsonDataException) {
-                    Log.e(TAG, "", ex)
-                }
-            }
-        }
+        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
     }
 
     fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
@@ -152,16 +122,22 @@ class PaymentFragment : Fragment(), RedirectCallback {
             referenceNumber = transactionData.sdkReferenceNumber
         )
         val paymentRequestJson = jsonAdapter.toJson(paymentRequest)
-        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson');") {}
+        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson');") { /* there's no result */ }
     }
 
     fun on3ds2ChallengeSuccess() {
         // TODO: call a JS method on the WebView
     }
 
+    override fun onDestroy() {
+        ThreeDS2ChallengeRequestor.cleanUp(requireContext())
+        super.onDestroy()
+    }
+
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
-        private val jsonAdapter = moshi.adapter(ThreeDS2ChallengeRequestParams::class.java)
+        private val jsonAdapterInitParams = moshi.adapter(ThreeDS2InitializationParams::class.java)
+        private val jsonAdapterChallengeParams = moshi.adapter(ThreeDS2ChallengeParams::class.java)
 
         /**
          * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`
@@ -175,32 +151,28 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
-        @JavascriptInterface
-        fun process3ds2ChallengeRequest(challengeParams: String) {
-            // TODO: correct the ^ callback's name ^ once it's determined by the backend devs
-            val paramsObject = jsonAdapter.fromJson(challengeParams)
-            if (paramsObject != null) {
-                paymentCallback.handle3ds2ChallengeRequest(paramsObject)
-            }
-        }
-
+        /**
+         * @param data It's a serialized object of the `ThreeDS2InitializationParams` class
+         */
         @JavascriptInterface
         fun sendNSoftSdkConfigToMobileApp(data: String) {
-            Log.d("chromium", "sendNSoftSdkConfigToMobileApp")
-            val paramsObject = jsonAdapter.fromJson(data)
+            Log.d(TAG, "sendNSoftSdkConfigToMobileApp") // TODO: debug log
+            val paramsObject = jsonAdapterInitParams.fromJson(data)
             if (paramsObject != null) {
                 paymentCallback.initialize3ds2Engine(paramsObject)
             }
         }
 
+        /**
+         * @param data It's a serialized object of the `ThreeDS2ChallengeParams` class
+         */
         @JavascriptInterface
         fun execute3DS2(data: String) {
-            Log.d("chromium", "execute3ds")
-        }
-
-        @JavascriptInterface
-        fun finalize3DS2Payment(data: String) {
-            Log.d("chromium", "finalize3DS2Payment")
+            Log.d(TAG, "execute3ds") // TODO: debug log
+            val paramsObject = jsonAdapterChallengeParams.fromJson(data)
+            if (paramsObject != null) {
+                paymentCallback.start3ds2Challenge(paramsObject)
+            }
         }
 
         @JavascriptInterface
