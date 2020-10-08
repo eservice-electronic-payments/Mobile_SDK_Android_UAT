@@ -121,7 +121,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         )
     }
 
-    override fun initialize3ds2Engine(initParams: ThreeDS2InitializationParams) {
+    override fun initialize3ds2Engine(initParams: ThreeDSTwoInitializationParams) {
         lifecycleScope.launch(context = Dispatchers.Default) {
             val context = this@EvoPaymentActivity
             try {
@@ -140,7 +140,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     private fun getPaymentFragment(): PaymentFragment =
         supportFragmentManager.findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
 
-    override fun start3ds2Challenge(challengeParams: ThreeDS2ChallengeParams) {
+    override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {
         lifecycleScope.launch(context = Dispatchers.Default) {
             val context = this@EvoPaymentActivity
             ThreeDSTwoChallengeManager.startChallenge(challengeParams, context) {

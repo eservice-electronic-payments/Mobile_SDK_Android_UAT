@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ThreeDS2InitializationParams(
+class ThreeDSTwoInitializationParams(
     @Json(name = "dsId")
     val directoryServerId: String,
     @Json(name = "dsCert")

@@ -140,8 +140,8 @@ class PaymentFragment : Fragment(), RedirectCallback {
     @Keep
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
-        private val jsonAdapterInitParams = moshi.adapter(ThreeDS2InitializationParams::class.java)
-        private val jsonAdapterChallengeParams = moshi.adapter(ThreeDS2ChallengeParams::class.java)
+        private val jsonAdapterInitParams = moshi.adapter(ThreeDSTwoInitializationParams::class.java)
+        private val jsonAdapterChallengeParams = moshi.adapter(ThreeDSTwoChallengeParams::class.java)
 
         /**
          * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`

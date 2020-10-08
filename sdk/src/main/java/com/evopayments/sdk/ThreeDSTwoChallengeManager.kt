@@ -8,7 +8,6 @@ import com.nsoftware.ipworks3ds.sdk.customization.UiCustomization
 import com.nsoftware.ipworks3ds.sdk.event.CompletionEvent
 import com.nsoftware.ipworks3ds.sdk.event.ProtocolErrorEvent
 import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
-import java.util.*
 
 object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
 
@@ -20,35 +19,33 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * not to invoke it on the main UI thread.
      * @see #cleanUp(Context)
      */
-    fun initialize(context: Context, initParams: ThreeDS2InitializationParams) {
+    fun initialize(context: Context, initParams: ThreeDSTwoInitializationParams) {
         val logTag = this::class.java.simpleName
         try {
             val licenseKey = initParams.licenseKeyReversed.reversed()
-            val directoryServerInfoList: MutableList<ConfigParameters.DirectoryServerInfo> =
-                ArrayList()
-            directoryServerInfoList.add(
-                ConfigParameters.DirectoryServerInfo(
-                    initParams.directoryServerId,
-                    initParams.dsPublicCertificate,
-                    initParams.dsRootCa
-                )
+            val directoryServerInfo = ConfigParameters.DirectoryServerInfo(
+                initParams.directoryServerId,
+                initParams.dsPublicCertificate,
+                initParams.dsRootCa
             )
-            val clientConfigs = arrayListOf<String>()
-            clientConfigs.add("logLevel=3")
-            clientConfigs.add("MaskSensitive=false")
-            val deviceParameterBlacklist = arrayListOf<String>()
-            deviceParameterBlacklist.add("A009")
-            deviceParameterBlacklist.add("A010")
-            val configParameters =
-                ConfigParameters.Builder(directoryServerInfoList, licenseKey)
-                    .clientConfig(clientConfigs)
-                    .deviceParameterBlacklist(deviceParameterBlacklist)
-                    .build()
+            val directoryServerInfoList = arrayListOf(directoryServerInfo)
+            val clientConfigs = arrayListOf<String>().apply {
+                add("logLevel=3")
+                add("MaskSensitive=false")
+            }
+            val deviceParameterBlacklist = arrayListOf<String>().apply {
+                add("A009")
+                add("A010")
+            }
+            val configParameters = ConfigParameters.Builder(directoryServerInfoList, licenseKey)
+                .clientConfig(clientConfigs)
+                .deviceParameterBlacklist(deviceParameterBlacklist)
+                .build()
             configParameters.addParam(null, "ShowWhiteBoxInProcessingScreen", "true")
             val uiCustomization = UiCustomization()
-//            uiCustomization.getButtonCustomization(UiCustomization.ButtonType.SUBMIT).backgroundColor =
-//                "#951728" // Dark red
-            val locale: String? = null          // TODO: < what about this parameter? < (from docs: it's optional)
+//            uiCustomization.getButtonCustomization(UiCustomization.ButtonType.SUBMIT).backgroundColor = "#951728" // Dark red
+            val locale: String? = null // TODO: < what about this parameter? < (from docs: it's optional)
+
             ThreeDS2Service.INSTANCE.initialize(
                 context,
                 configParameters,
@@ -67,6 +64,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
                     // abort the checkout if necessary
                 }
             }
+
             transaction = ThreeDS2Service.INSTANCE.createTransaction(initParams.directoryServerId, initParams.messageVersion)
         } catch (ex: Exception) {
             Log.e(logTag, "An exception raised during 3DS2 SDK initialization!", ex)
@@ -89,7 +87,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * Note: This method MUST be invoked on a background thread.
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
-    fun startChallenge(requestParams: ThreeDS2ChallengeParams, context: Activity, onCompleted: () -> Unit) {
+    fun startChallenge(requestParams: ThreeDSTwoChallengeParams, context: Activity, onCompleted: () -> Unit) {
         val transaction = transaction
         checkNotNull(transaction)
 
@@ -102,7 +100,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             // TODO: setThreeDSRequestorAppURL missing (from server-side)...
         }
 
-//        transaction.doChallenge(context, challengeParameters, this, 5)
+//        transaction.doChallenge(context, challengeParameters, this, 5) // TODO: uncomment when data ready
     }
 
     fun cleanUp(context: Context) {

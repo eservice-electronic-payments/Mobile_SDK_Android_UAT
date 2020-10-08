@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ThreeDS2ChallengeParams(
+class ThreeDSTwoChallengeParams(
     @Json(name = "type")
     val type: String,
     @Json(name = "3DSServerTransactionID")
