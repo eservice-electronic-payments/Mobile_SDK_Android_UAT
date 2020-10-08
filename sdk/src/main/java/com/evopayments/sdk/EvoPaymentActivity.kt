@@ -141,9 +141,11 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         supportFragmentManager.findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
 
     override fun start3ds2Challenge(challengeParams: ThreeDS2ChallengeParams) {
-        val context = this
-        ThreeDSTwoChallengeManager.startChallenge(challengeParams, context) {
-            // TODO: on completed...
+        lifecycleScope.launch(context = Dispatchers.Default) {
+            val context = this@EvoPaymentActivity
+            ThreeDSTwoChallengeManager.startChallenge(challengeParams, context) {
+                // TODO: on completed...
+            }
         }
     }
 

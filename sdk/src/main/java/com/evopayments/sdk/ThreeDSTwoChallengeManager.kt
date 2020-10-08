@@ -86,6 +86,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
 
     /**
      * 3DS2 SDK must be initialized before calling this method.
+     * Note: This method MUST be invoked on a background thread.
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
     fun startChallenge(requestParams: ThreeDS2ChallengeParams, context: Activity, onCompleted: () -> Unit) {
@@ -101,7 +102,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             // TODO: setThreeDSRequestorAppURL missing (from server-side)...
         }
 
-        transaction.doChallenge(context, challengeParameters, this, 5)
+//        transaction.doChallenge(context, challengeParameters, this, 5)
     }
 
     fun cleanUp(context: Context) {
