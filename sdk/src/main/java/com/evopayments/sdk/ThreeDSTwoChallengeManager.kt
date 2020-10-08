@@ -56,11 +56,10 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
                 Log.w(logTag, "Security Event captured! severity: $severity, securityEvent: $securityEvent")
             }
 
-            /* check warnings */
             val warnings = ThreeDS2Service.INSTANCE.warnings
             if (warnings.size > 0) {
                 warnings.map { warning ->
-                    Log.w("WARNING", "${warning.id} ${warning.message}")
+                    Log.w(logTag, "WARNING! ${warning.id} ${warning.message}")
                     // abort the checkout if necessary
                 }
             }

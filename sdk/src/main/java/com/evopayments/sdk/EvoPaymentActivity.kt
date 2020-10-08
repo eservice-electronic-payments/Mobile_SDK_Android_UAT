@@ -145,6 +145,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
             val context = this@EvoPaymentActivity
             ThreeDSTwoChallengeManager.startChallenge(challengeParams, context) {
                 // TODO: on completed...
+                getPaymentFragment().provideReactWith3ds2ChallengeResult()
             }
         }
     }

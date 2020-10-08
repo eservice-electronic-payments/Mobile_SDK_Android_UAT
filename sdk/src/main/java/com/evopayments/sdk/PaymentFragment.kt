@@ -128,8 +128,8 @@ class PaymentFragment : Fragment(), RedirectCallback {
         callMethodOnWebView("continuePayment", paymentRequestJson)
     }
 
-    fun on3ds2ChallengeSuccess() {
-        // TODO: call a JS method on the WebView
+    fun provideReactWith3ds2ChallengeResult() {
+        // TODO: call a JS method on the WebView (the API not yet ready, method name not determined)
     }
 
     override fun onDestroy() {
