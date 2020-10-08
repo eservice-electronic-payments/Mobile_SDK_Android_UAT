@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
@@ -103,14 +104,16 @@ class PaymentFragment : Fragment(), RedirectCallback {
         val paymentToken = processor.getToken()
 
         if (paymentToken != null) {
-            sendTokenToWebView(paymentToken)
+            callMethodOnWebView("onGPayTokenReceived", paymentToken)
         } else {
             paymentCallback.onPaymentFailed()
         }
     }
 
-    private fun sendTokenToWebView(token: String) {
-        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
+    private fun callMethodOnWebView(methodName: String, callParameter: String) {
+        webView.evaluateJavascript("window.JSInterface.$methodName($callParameter);") {
+            /* there's no result */
+        }
     }
 
     fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
@@ -122,7 +125,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             referenceNumber = transactionData.sdkReferenceNumber
         )
         val paymentRequestJson = jsonAdapter.toJson(paymentRequest)
-        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson');") { /* there's no result */ }
+        callMethodOnWebView("continuePayment", paymentRequestJson)
     }
 
     fun on3ds2ChallengeSuccess() {
@@ -130,10 +133,11 @@ class PaymentFragment : Fragment(), RedirectCallback {
     }
 
     override fun onDestroy() {
-        ThreeDS2ChallengeRequestor.cleanUp(requireContext())
+        ThreeDSTwoChallengeManager.cleanUp(requireContext())
         super.onDestroy()
     }
 
+    @Keep
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
         private val jsonAdapterInitParams = moshi.adapter(ThreeDS2InitializationParams::class.java)
@@ -141,7 +145,8 @@ class PaymentFragment : Fragment(), RedirectCallback {
 
         /**
          * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`
-        */
+         */
+        @Keep
         @JavascriptInterface
         fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
@@ -154,6 +159,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         /**
          * @param data It's a serialized object of the `ThreeDS2InitializationParams` class
          */
+        @Keep
         @JavascriptInterface
         fun sendNSoftSdkConfigToMobileApp(data: String) {
             Log.d(TAG, "sendNSoftSdkConfigToMobileApp") // TODO: debug log
@@ -166,6 +172,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         /**
          * @param data It's a serialized object of the `ThreeDS2ChallengeParams` class
          */
+        @Keep
         @JavascriptInterface
         fun execute3DS2(data: String) {
             Log.d(TAG, "execute3ds") // TODO: debug log
@@ -175,6 +182,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentStarted() {
             handler.post {
@@ -183,6 +191,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentSuccessful() {
             handler.post {
@@ -191,6 +200,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentCancelled() {
             handler.post {
@@ -199,6 +209,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentFailed() {
             handler.post {
@@ -207,6 +218,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentUndetermined() {
             handler.post {
@@ -215,6 +227,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun redirected(url: String) {
             handler.post {
@@ -228,6 +241,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun close() {
             handler.post {

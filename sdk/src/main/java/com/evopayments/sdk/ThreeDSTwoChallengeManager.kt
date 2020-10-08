@@ -10,17 +10,18 @@ import com.nsoftware.ipworks3ds.sdk.event.ProtocolErrorEvent
 import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
 import java.util.*
 
-object ThreeDS2ChallengeRequestor : ChallengeStatusReceiver, ClientEventListener {
+object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
 
-    var transaction: Transaction? = null
-
-    @Volatile private var isInitialized = false
+    private var transaction: Transaction? = null
 
     /**
      * SDK must be cleaned up before the next call to this method.
+     * Note: This method invocation can take some time. It's better
+     * not to invoke it on the main UI thread.
      * @see #cleanUp(Context)
      */
     fun initialize(context: Context, initParams: ThreeDS2InitializationParams) {
+        val logTag = this::class.java.simpleName
         try {
             val licenseKey = initParams.licenseKeyReversed.reversed()
             val directoryServerInfoList: MutableList<ConfigParameters.DirectoryServerInfo> =
@@ -47,36 +48,44 @@ object ThreeDS2ChallengeRequestor : ChallengeStatusReceiver, ClientEventListener
             val uiCustomization = UiCustomization()
 //            uiCustomization.getButtonCustomization(UiCustomization.ButtonType.SUBMIT).backgroundColor =
 //                "#951728" // Dark red
-            val locale: String? = null          // TODO: < what about this parameter? <
+            val locale: String? = null          // TODO: < what about this parameter? < (from docs: it's optional)
             ThreeDS2Service.INSTANCE.initialize(
                 context,
                 configParameters,
                 locale,
                 uiCustomization,
-                this,
-                null // TODO: <- added in the newest unofficial nSoft SDK build
-            )
-
-            isInitialized = true
+                this
+            ) { severity: SecurityEventListener.Severity, securityEvent: SecurityEventListener.SecurityEvent ->
+                Log.w(logTag, "Security Event captured! severity: $severity, securityEvent: $securityEvent")
+            }
 
             /* check warnings */
             val warnings = ThreeDS2Service.INSTANCE.warnings
             if (warnings.size > 0) {
                 warnings.map { warning ->
                     Log.w("WARNING", "${warning.id} ${warning.message}")
+                    // abort the checkout if necessary
                 }
-                // process warning
-                // abort the checkout if necessary
             }
             transaction = ThreeDS2Service.INSTANCE.createTransaction(initParams.directoryServerId, initParams.messageVersion)
         } catch (ex: Exception) {
-            Log.e(this::class.java.simpleName, "An exception during SDK initialization!", ex)
-//            throw ex // TODO: throw?
+            Log.e(logTag, "An exception raised during 3DS2 SDK initialization!", ex)
+//            throw ex // TODO: uncomment?
         }
     }
 
     /**
-     * An SDK must be initialized before calling this method.
+     * 3DS2 SDK must be initialized before calling this method.
+     * @see #initialize(Context, ThreeDS2InitializationParams)
+     */
+    fun getAuthenticationRequestParameters(): AuthenticationRequestParameters {
+        val transaction = transaction
+        checkNotNull(transaction)
+        return transaction.authenticationRequestParameters
+    }
+
+    /**
+     * 3DS2 SDK must be initialized before calling this method.
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
     fun startChallenge(requestParams: ThreeDS2ChallengeParams, context: Activity, onCompleted: () -> Unit) {
@@ -89,23 +98,14 @@ object ThreeDS2ChallengeRequestor : ChallengeStatusReceiver, ClientEventListener
             acsRefNumber = requestParams.acsRefNumber
             acsSignedContent = requestParams.acsSignedContent
             set3DSServerTransactionID(requestParams.threeDSTransactionId)
-            // TODO: setThreeDSRequestorAppURL missing...
+            // TODO: setThreeDSRequestorAppURL missing (from server-side)...
         }
 
         transaction.doChallenge(context, challengeParameters, this, 5)
-
-//        while (!isTransactionDone()) {
-//            Thread.sleep(100)
-//        }
     }
 
-//    private fun createTransaction(): Transaction {
-//        return ThreeDS2Service.INSTANCE.createTransaction(TEST_DS_ID, "2.2.0")
-//    }
-
     fun cleanUp(context: Context) {
-        if (isInitialized) {
-            isInitialized = false
+        if (transaction != null) {
             transaction = null
             ThreeDS2Service.INSTANCE.cleanup(context)
         }
@@ -133,7 +133,6 @@ object ThreeDS2ChallengeRequestor : ChallengeStatusReceiver, ClientEventListener
 
 
 //    private class MyClientEventListener : ClientEventListener {
-
         override fun fireLog(
             logLevel: Int,
             message: String,
