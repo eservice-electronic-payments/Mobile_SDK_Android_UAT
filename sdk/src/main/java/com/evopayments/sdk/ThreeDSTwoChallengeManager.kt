@@ -57,11 +57,9 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             }
 
             val warnings = ThreeDS2Service.INSTANCE.warnings
-            if (warnings.size > 0) {
-                warnings.map { warning ->
-                    Log.w(logTag, "WARNING! ${warning.id} ${warning.message}")
-                    // abort the checkout if necessary
-                }
+            warnings.map { warning ->
+                Log.w(logTag, "WARNING! ${warning.id} ${warning.message}")
+                // abort the checkout if necessary
             }
 
             transaction = ThreeDS2Service.INSTANCE.createTransaction(initParams.directoryServerId, initParams.messageVersion)
