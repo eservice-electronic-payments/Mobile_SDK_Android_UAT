@@ -157,7 +157,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         }
 
         /**
-         * @param data It's a serialized object of the `ThreeDS2InitializationParams` class
+         * @param data It's a serialized object of the `ThreeDSTwoInitializationParams` class
          */
         @Keep
         @JavascriptInterface
@@ -170,7 +170,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         }
 
         /**
-         * @param data It's a serialized object of the `ThreeDS2ChallengeParams` class
+         * @param data It's a serialized object of the `ThreeDSTwoChallengeParams` class
          */
         @Keep
         @JavascriptInterface
