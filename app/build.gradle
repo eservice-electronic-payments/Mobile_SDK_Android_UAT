@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 repositories {
     flatDir {
-        dirs 'libs'
+        dirs project(':sdk').file('libs')
     }
 }
 
@@ -24,10 +24,6 @@ android {
         targetCompatibility 1.8
     }
     buildTypes {
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -42,14 +38,12 @@ ext {
 dependencies {
     // Modules
     implementation project(":sdk")
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.1'
     //implementation 'com.github.intelligentpayments:androidSDK:0.3.0'
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Android X
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.core:core-ktx:1.3.2'
     // Jetpack
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
@@ -60,9 +54,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     // OkHttp
     implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
-    // Moshi
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 
     // Tests
     testImplementation 'junit:junit:4.12'
