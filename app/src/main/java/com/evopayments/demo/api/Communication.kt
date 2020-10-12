@@ -1,9 +1,11 @@
 package com.evopayments.demo.api
 
+import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 /**
  * Created by Maciej Kozłowski on 2019-05-10.
@@ -26,9 +28,10 @@ object Communication {
 
     fun reinit(url:String) {
         tokenUrl = url
+        val moshiInstance = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val retrofit = Retrofit
             .Builder()
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshiInstance))
             .client(getHttpClient())
             .baseUrl(url)
             .build()

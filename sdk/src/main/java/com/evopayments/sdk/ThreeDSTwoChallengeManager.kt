@@ -12,9 +12,10 @@ import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
 object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
 
     private var transaction: Transaction? = null
+    private var callback: EvoPaymentsCallback? = null
 
     /**
-     * SDK must be cleaned up before the next call to this method.
+     * SDK must be cleaned up before a subsequent call to this method.
      * Note: This method invocation can take some time. It's better
      * not to invoke it on the main UI thread.
      * @see #cleanUp(Context)
@@ -30,7 +31,9 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             )
             val directoryServerInfoList = arrayListOf(directoryServerInfo)
             val clientConfigs = arrayListOf<String>().apply {
+                // Log levels: 0 (None), 1 (Info), 2 (Verbose), 3 (Debug)
                 add("logLevel=3")
+                // MaskSensitive setting controls whether sensitive data is masked in the Log event
                 add("MaskSensitive=false")
             }
             val deviceParameterBlacklist = arrayListOf<String>().apply {
@@ -40,11 +43,14 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             val configParameters = ConfigParameters.Builder(directoryServerInfoList, licenseKey)
                 .clientConfig(clientConfigs)
                 .deviceParameterBlacklist(deviceParameterBlacklist)
-                .build()
-            configParameters.addParam(null, "ShowWhiteBoxInProcessingScreen", "true")
+                .build().apply {
+                    // Display a white box behind the processing icon and directory server image:
+                    addParam(null, "ShowWhiteBoxInProcessingScreen", "true")
+                }
+            // String representation of the locale for the app's UI (e.g. "en-US") (optional):
+            val locale: String? = null
             val uiCustomization = UiCustomization()
 //            uiCustomization.getButtonCustomization(UiCustomization.ButtonType.SUBMIT).backgroundColor = "#951728" // Dark red
-            val locale: String? = null // TODO: < what about this parameter? < (from docs: it's optional)
 
             ThreeDS2Service.INSTANCE.initialize(
                 context,
@@ -84,7 +90,11 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * Note: This method MUST be invoked on a background thread.
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
-    fun startChallenge(requestParams: ThreeDSTwoChallengeParams, context: Activity, onCompleted: () -> Unit) {
+    fun startChallenge(
+        requestParams: ThreeDSTwoChallengeParams,
+        callback: EvoPaymentsCallback,
+        context: Activity
+    ) {
         val transaction = transaction
         checkNotNull(transaction)
 
@@ -97,66 +107,72 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             // TODO: setThreeDSRequestorAppURL missing (from server-side)...
         }
 
-//        transaction.doChallenge(context, challengeParameters, this, 5) // TODO: uncomment when data ready
+        this.callback = callback
+
+        transaction.doChallenge(context, challengeParameters, this, 5) // TODO: will generate error - data needed from back-end
     }
 
     fun cleanUp(context: Context) {
         if (transaction != null) {
             transaction = null
+            callback = null
             ThreeDS2Service.INSTANCE.cleanup(context)
         }
     }
 
     override fun cancelled() {
-        TODO("Not yet implemented")
+        callback?.onPaymentCancelled()
     }
 
     override fun protocolError(p0: ProtocolErrorEvent?) {
-        TODO("Not yet implemented")
+        callback?.onPaymentFailed()
     }
 
     override fun runtimeError(p0: RuntimeErrorEvent?) {
-        TODO("Not yet implemented")
+        // TODO: remove the logging once the data from backend is complete and challenge can be finished:
+        val errMsg =
+            "3DS2 SDK runtime error! (probably the `threeDSRequestorAppURL` missing from the back-end server)"
+        Log.e(this::class.java.simpleName, errMsg + "\n${p0?.errorMessage}")
+        callback?.onPaymentFailed()
     }
 
     override fun completed(p0: CompletionEvent?) {
-        TODO("Not yet implemented")
+        callback?.onPaymentSuccessful()
     }
 
     override fun timedout() {
-        TODO("Not yet implemented")
+        callback?.onSessionExpired()
     }
 
-
 //    private class MyClientEventListener : ClientEventListener {
-        override fun fireLog(
-            logLevel: Int,
-            message: String,
-            logType: String
-        ) {
-            Log.i("ClientLog", "$logType - $message")
-        }
+    override fun fireLog(
+        logLevel: Int,
+        message: String,
+        logType: String
+    ) {
+        Log.i("ClientLog", "$logType - $message")
+    }
 
-        override fun fireDataPacketIn(dataPacket: ByteArray) {
-            Log.i("ClientDataPacketIn", String(dataPacket))
-        }
+    override fun fireDataPacketIn(dataPacket: ByteArray) {
+        Log.i("ClientDataPacketIn", String(dataPacket))
+    }
 
-        override fun fireDataPacketOut(dataPacket: ByteArray) {
-            Log.i("ClientDataPacketOut", String(dataPacket))
-        }
+    override fun fireDataPacketOut(dataPacket: ByteArray) {
+        Log.i("ClientDataPacketOut", String(dataPacket))
+    }
 
-        override fun fireSSLStatus(message: String) {
-            Log.i("ClientSSLStatus", message)
-        }
+    override fun fireSSLStatus(message: String) {
+        Log.i("ClientSSLStatus", message)
+    }
 
-        override fun fireSSLServerAuthentication(
-            certEncoded: ByteArray,
-            certSubject: String,
-            certIssuer: String,
-            status: String,
-            accept: BooleanArray
-        ) {
-            //accept[0] = true; // todo
-        }
+    override fun fireSSLServerAuthentication(
+        certEncoded: ByteArray,
+        certSubject: String,
+        certIssuer: String,
+        status: String,
+        accept: BooleanArray
+    ) {
+        //accept[0] = true; // todo
+    }
 //    }
 }

@@ -143,11 +143,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {
         lifecycleScope.launch(context = Dispatchers.Default) {
             val context = this@EvoPaymentActivity
-            ThreeDSTwoChallengeManager.startChallenge(challengeParams, context) {
-                // TODO: on completed...
-                getPaymentFragment().provideReactWith3ds2ChallengeResult()
-            }
+            val callback = this@EvoPaymentActivity
+            ThreeDSTwoChallengeManager.startChallenge(challengeParams, callback, context)
         }
+    }
+
+    private fun on3ds2ChallengeSuccessful() {
+        getPaymentFragment().provideReactWith3ds2ChallengeResult()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -164,9 +164,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         fun sendNSoftSdkConfigToMobileApp(data: String) {
             Log.d(TAG, "sendNSoftSdkConfigToMobileApp") // TODO: debug log
             val paramsObject = jsonAdapterInitParams.fromJson(data)
-            if (paramsObject != null) {
-                paymentCallback.initialize3ds2Engine(paramsObject)
-            }
+            paramsObject?.let(paymentCallback::initialize3ds2Engine)
         }
 
         /**
@@ -177,9 +175,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         fun execute3DS2(data: String) {
             Log.d(TAG, "execute3ds") // TODO: debug log
             val paramsObject = jsonAdapterChallengeParams.fromJson(data)
-            if (paramsObject != null) {
-                paymentCallback.start3ds2Challenge(paramsObject)
-            }
+            paramsObject?.let(paymentCallback::start3ds2Challenge)
         }
 
         @Keep
