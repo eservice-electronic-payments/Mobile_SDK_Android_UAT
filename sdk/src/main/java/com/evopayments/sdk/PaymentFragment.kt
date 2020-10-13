@@ -125,7 +125,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             referenceNumber = transactionData.sdkReferenceNumber
         )
         val paymentRequestJson = jsonAdapter.toJson(paymentRequest)
-        callMethodOnWebView("continuePayment", paymentRequestJson)
+        callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
     }
 
     fun provideReactWith3ds2ChallengeResult() {
