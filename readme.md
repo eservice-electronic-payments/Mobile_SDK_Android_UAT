@@ -1,3 +1,7 @@
+## Pre-condition
+
+Please note that the call from the Merchant Server to the IPG Gateway API for obtaining an IPG Gateway “Session Token” has been updated. (This update is due to additional data fields mandated by 3DS-Version 2 compliance). It is a prerequisite that the Session Token passed to the Mobile SDK is obtained from that updated Get Session Token API endpoint.
+
 ## Installation
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
