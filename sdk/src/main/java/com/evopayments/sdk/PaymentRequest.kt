@@ -1,9 +1,7 @@
 package com.evopayments.sdk
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
 class PaymentRequest(
     @Json(name = "SDKTransactionId")
     val transactionId: String,
