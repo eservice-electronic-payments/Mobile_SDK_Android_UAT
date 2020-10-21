@@ -2,9 +2,7 @@ package com.evopayments.demo.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebView.setWebContentsDebuggingEnabled
-import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -48,6 +46,12 @@ class MainActivity : AppCompatActivity() {
         languageEditText.setText(defaults.getLanguage())
         customerFirstNameEditText.setText(defaults.getCustomerFirstName())
         customerLastNameEditText.setText(defaults.getCustomerLastName())
+        customerAddressStreet.setText(defaults.getCustomerAddressStreet())
+        customerAddressHouseName.setText(defaults.getCustomerAddressHouseName())
+        customerAddressCity.setText(defaults.getCustomerAddressCity())
+        customerAddressPostalCode.setText(defaults.getCustomerAddressPostalCode())
+        customerAddressCountry.setText(defaults.getCustomerAddressCountry())
+        customerAddressState.setText(defaults.getCustomerAddressState())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
@@ -72,6 +76,11 @@ class MainActivity : AppCompatActivity() {
             myriadFlowId = myriadFlowId,
             customerFirstName = customerFirstNameEditText.getValue(),
             customerLastName = customerLastNameEditText.getValue(),
+            customerAddressHouseName = customerAddressHouseName.getValue(),
+            customerAddressCity = customerAddressCity.getValue(),
+            customerAddressPostalCode = customerAddressPostalCode.getValue(),
+            customerAddressCountry = customerAddressCountry.getValue(),
+            customerAddressState = customerAddressState.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
             customParams = customParams
         )

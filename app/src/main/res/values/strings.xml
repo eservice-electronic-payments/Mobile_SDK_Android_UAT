@@ -25,5 +25,11 @@
     <string name="language_code">language code</string>
     <string name="customer_first_name">customer first name</string>
     <string name="customer_last_name">customer last name</string>
+    <string name="customer_address_house_name">customer address house name</string>
+    <string name="customer_address_street">customer address street</string>
+    <string name="customer_address_city">customer address city</string>
+    <string name="customer_address_postal_code">customer address postal code</string>
+    <string name="customer_address_country">customer address country</string>
+    <string name="customer_address_state">customer address state</string>
 	<string name="leave_to_use_server_cfg">leave empty to use server config:</string>
 </resources>

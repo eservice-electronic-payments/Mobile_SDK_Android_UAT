@@ -78,14 +78,56 @@
 			android:hint="@string/customer_last_name"
 			/>
 
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressStreet"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_street"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressHouseName"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_house_name"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressCity"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_city"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressPostalCode"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_postal_code"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressCountry"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_country"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressState"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_state"
+			/>
+
 		<Button
 			android:id="@+id/startPaymentButton"
 			android:layout_width="match_parent"
 			android:layout_height="80dp"
 			android:layout_gravity="center"
-			android:textColor="@color/white"
 			android:background="@color/colorPrimary"
 			android:text="@string/start_demo"
+			android:textColor="@color/white"
 			/>
 
 		<androidx.appcompat.widget.AppCompatEditText
