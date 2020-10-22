@@ -112,8 +112,12 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
         transaction.doChallenge(context, challengeParameters, this, 5) // TODO: will generate error - data needed from back-end
     }
 
+    /**
+     * It's important to call this method once the transaction is done.
+     */
     fun cleanUp(context: Context) {
         if (transaction != null) {
+            transaction?.close()
             transaction = null
             callback = null
             ThreeDS2Service.INSTANCE.cleanup(context)
