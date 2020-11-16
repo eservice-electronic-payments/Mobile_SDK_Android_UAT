@@ -17,8 +17,10 @@ class DemoTokenParameters(
     customerAddressHouseName: String = "1",
     customerAddressCity: String = "London",
     customerAddressPostalCode: String = "NW6 4DN",
-    customerAddressCountry: String = "United Kingdom",
+    customerAddressCountry: String = "GB",
     customerAddressState: String = "London",
+    customerPhone: String = "",
+    customerEmail: String = "",
     userDevice: String = "MOBILE",
     customerIPAddress: String = "",
     customerAccountInfo: String = "",
@@ -45,6 +47,8 @@ class DemoTokenParameters(
         put(CUSTOMER_ADDRESS_POSTAL_CODE, customerAddressPostalCode)
         put(CUSTOMER_ADDRESS_COUNTRY, customerAddressCountry)
         put(CUSTOMER_ADDRESS_STATE, customerAddressState)
+        put(CUSTOMER_PHONE, customerPhone)
+        put(CUSTOMER_EMAIL, customerEmail)
         put(USER_DEVICE, userDevice)
         put(CUSTOMER_IP_ADDRESS, customerIPAddress)
         put(CUSTOMER_ACCOUNT_INFO, customerAccountInfo)
@@ -107,6 +111,8 @@ class DemoTokenParameters(
         private const val CUSTOMER_ADDRESS_POSTAL_CODE = "customerAddressPostalCode"
         private const val CUSTOMER_ADDRESS_COUNTRY = "customerAddressCountry"
         private const val CUSTOMER_ADDRESS_STATE = "customerAddressState"
+        private const val CUSTOMER_PHONE = "customerPhone"
+        private const val CUSTOMER_EMAIL = "customerEmail"
         private const val USER_DEVICE = "userDevice"
         private const val CUSTOMER_IP_ADDRESS = "customerIPAddress"
         private const val CUSTOMER_ACCOUNT_INFO = "customerAccountInfo"

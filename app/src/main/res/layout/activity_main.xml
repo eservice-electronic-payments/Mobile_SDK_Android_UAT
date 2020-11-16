@@ -120,6 +120,20 @@
 			android:hint="@string/customer_address_state"
 			/>
 
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerPhone"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_phone"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerEmail"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_email"
+			/>
+
 		<Button
 			android:id="@+id/startPaymentButton"
 			android:layout_width="match_parent"

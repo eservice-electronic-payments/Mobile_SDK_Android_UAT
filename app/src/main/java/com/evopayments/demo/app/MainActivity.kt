@@ -81,6 +81,8 @@ class MainActivity : AppCompatActivity() {
             customerAddressPostalCode = customerAddressPostalCode.getValue(),
             customerAddressCountry = customerAddressCountry.getValue(),
             customerAddressState = customerAddressState.getValue(),
+            customerPhone = customerPhone.getValue(),
+            customerEmail = customerEmail.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
             customParams = customParams
         )

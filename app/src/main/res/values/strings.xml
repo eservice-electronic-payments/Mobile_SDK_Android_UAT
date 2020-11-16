@@ -31,5 +31,7 @@
     <string name="customer_address_postal_code">customer address postal code</string>
     <string name="customer_address_country">customer address country</string>
     <string name="customer_address_state">customer address state</string>
+    <string name="customer_phone">customer phone</string>
+    <string name="customer_email">customer email</string>
 	<string name="leave_to_use_server_cfg">leave empty to use server config:</string>
 </resources>
