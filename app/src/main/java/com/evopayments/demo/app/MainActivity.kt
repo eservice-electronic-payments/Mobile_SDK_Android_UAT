@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         customerAddressPostalCode.setText(defaults.getCustomerAddressPostalCode())
         customerAddressCountry.setText(defaults.getCustomerAddressCountry())
         customerAddressState.setText(defaults.getCustomerAddressState())
+        customerPhone.setText(defaults.getCustomerPhone())
+        customerEmail.setText(defaults.getCustomerEmail())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!

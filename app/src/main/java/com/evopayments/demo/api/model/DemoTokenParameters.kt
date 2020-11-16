@@ -17,8 +17,8 @@ class DemoTokenParameters(
     customerAddressHouseName: String = "1",
     customerAddressCity: String = "London",
     customerAddressPostalCode: String = "NW6 4DN",
-    customerAddressCountry: String = "GB",
-    customerAddressState: String = "London",
+    customerAddressCountry: String = "GB",  // Iso code
+    customerAddressState: String = "LND",   // Iso code
     customerPhone: String = "",
     customerEmail: String = "",
     userDevice: String = "MOBILE",
@@ -91,6 +91,10 @@ class DemoTokenParameters(
     fun getCustomerAddressCountry() = get(CUSTOMER_ADDRESS_COUNTRY)
 
     fun getCustomerAddressState() = get(CUSTOMER_ADDRESS_STATE)
+
+    fun getCustomerPhone() = get(CUSTOMER_PHONE)
+
+    fun getCustomerEmail() = get(CUSTOMER_EMAIL)
 
     companion object {
         private const val CUSTOMER_ID = "customerId"
