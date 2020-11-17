@@ -134,8 +134,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
 
     override fun runtimeError(p0: RuntimeErrorEvent?) {
         // TODO: remove the logging once the data from backend is complete and challenge can be finished:
-        val errMsg =
-            "3DS2 SDK runtime error! (probably the `threeDSRequestorAppURL` missing from the back-end server)"
+        val errMsg = "3DS2 SDK runtime error!"
         Log.e(this::class.java.simpleName, errMsg + "\n${p0?.errorMessage}")
         callback?.onPaymentFailed()
     }
