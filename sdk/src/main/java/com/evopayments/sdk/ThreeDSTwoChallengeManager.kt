@@ -13,6 +13,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
 
     private var transaction: Transaction? = null
     private var callback: EvoPaymentsCallback? = null
+    var completionEvent: CompletionEvent? = null
 
     /**
      * SDK must be cleaned up before a subsequent call to this method.
@@ -140,6 +141,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
     }
 
     override fun completed(p0: CompletionEvent?) {
+        completionEvent = p0
         callback?.onPaymentSuccessful()
     }
 

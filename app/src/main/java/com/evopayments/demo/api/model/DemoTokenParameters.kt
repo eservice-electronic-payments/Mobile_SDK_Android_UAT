@@ -17,8 +17,8 @@ class DemoTokenParameters(
     customerAddressHouseName: String = "1",
     customerAddressCity: String = "London",
     customerAddressPostalCode: String = "NW6 4DN",
-    customerAddressCountry: String = "GB",  // Iso code
-    customerAddressState: String = "LND",   // Iso code
+    customerAddressCountry: String = "GB",  // ISO code
+    customerAddressState: String = "LND",   // ISO code
     customerPhone: String = "",
     customerEmail: String = "",
     userDevice: String = "MOBILE",

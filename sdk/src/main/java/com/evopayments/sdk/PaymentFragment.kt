@@ -39,6 +39,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
 
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val jsonAdapter = moshi.adapter(PaymentRequest::class.java)
+    private val jsonAdapterChallengeResult = moshi.adapter(ThreeDSTwoChallengeResult::class.java)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -128,8 +129,10 @@ class PaymentFragment : Fragment(), RedirectCallback {
         callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
     }
 
-    fun provideReactWith3ds2ChallengeResult() {
-        // TODO: call a JS method on the WebView (the API not yet ready, method name not determined)
+    fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
+        val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
+        val finalCResJson = jsonAdapterChallengeResult.toJson(resultObject)
+        callMethodOnWebView("finalize3DS2Payment", "'$finalCResJson'")
     }
 
     override fun onDestroy() {
