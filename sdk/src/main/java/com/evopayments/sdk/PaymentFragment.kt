@@ -132,7 +132,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
     fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
         val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
         val finalCResJson = jsonAdapterChallengeResult.toJson(resultObject)
-        callMethodOnWebView("finalize3DS2Payment", "'$finalCResJson'")
+        callMethodOnWebView("finalize3DS2Payment", finalCResJson)
     }
 
     override fun onDestroy() {
