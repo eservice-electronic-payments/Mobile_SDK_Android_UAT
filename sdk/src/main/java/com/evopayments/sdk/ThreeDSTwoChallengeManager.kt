@@ -12,12 +12,11 @@ import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
 object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
 
     private var transaction: Transaction? = null
-    private var callback: EvoPaymentsCallback? = null
-    var completionEvent: CompletionEvent? = null
+    private var callback: Callback? = null
 
     /**
      * SDK must be cleaned up before a subsequent call to this method.
-     * Note: This method invocation can take some time. It's better
+     * Note: This method's invocation can take some time. It's better
      * not to invoke it on the main UI thread.
      * @see #cleanUp(Context)
      */
@@ -92,9 +91,12 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
     fun startChallenge(
+        context: Activity,
         requestParams: ThreeDSTwoChallengeParams,
-        callback: EvoPaymentsCallback,
-        context: Activity
+        onCompleted: (transactionId: String, challengeStatus: String) -> Unit,
+        onFailed: () -> Unit,
+        onCancelled: () -> Unit,
+        onTimedOut: () -> Unit
     ) {
         val transaction = transaction
         checkNotNull(transaction)
@@ -105,12 +107,12 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             acsRefNumber = requestParams.acsRefNumber
             acsSignedContent = requestParams.acsSignedContent
             set3DSServerTransactionID(requestParams.threeDSTransactionId)
-            // TODO: setThreeDSRequestorAppURL missing (from server-side)...
+            // TODO: setThreeDSRequestorAppURL missing
         }
 
-        this.callback = callback
+        this.callback = Callback(onCompleted, onFailed, onCancelled, onTimedOut)
 
-        transaction.doChallenge(context, challengeParameters, this, 5) // TODO: will generate error - data needed from back-end
+        transaction.doChallenge(context, challengeParameters, this, 5)
     }
 
     /**
@@ -126,27 +128,29 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
     }
 
     override fun cancelled() {
-        callback?.onPaymentCancelled()
+        callback?.onCancelled?.invoke()
     }
 
     override fun protocolError(p0: ProtocolErrorEvent?) {
-        callback?.onPaymentFailed()
+        callback?.onFailed?.invoke()
     }
 
     override fun runtimeError(p0: RuntimeErrorEvent?) {
         // TODO: remove the logging once the data from backend is complete and challenge can be finished:
         val errMsg = "3DS2 SDK runtime error!"
         Log.e(this::class.java.simpleName, errMsg + "\n${p0?.errorMessage}")
-        callback?.onPaymentFailed()
+        callback?.onFailed?.invoke()
     }
 
     override fun completed(p0: CompletionEvent?) {
-        completionEvent = p0
-        callback?.onPaymentSuccessful()
+        checkNotNull(p0)
+        val transactionId = p0.sdkTransactionID
+        val transactionStatus = p0.transactionStatus
+        callback?.onCompleted?.invoke(transactionId, transactionStatus)
     }
 
     override fun timedout() {
-        callback?.onSessionExpired()
+        callback?.onTimedOut?.invoke()
     }
 
 //    private class MyClientEventListener : ClientEventListener {
@@ -180,4 +184,11 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
         //accept[0] = true; // todo
     }
 //    }
+
+    private class Callback(
+        val onCompleted: (transactionId: String, challengeStatus: String) -> Unit,
+        val onFailed: () -> Unit,
+        val onCancelled: () -> Unit,
+        val onTimedOut: () -> Unit
+    )
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import androidx.annotation.Keep
+import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
@@ -117,6 +118,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         }
     }
 
+    @MainThread
     fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
         val paymentRequest = PaymentRequest(
             transactionId = transactionData.sdkTransactionID,
@@ -129,6 +131,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
     }
 
+    @MainThread
     fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
         val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
         val finalCResJson = jsonAdapterChallengeResult.toJson(resultObject)

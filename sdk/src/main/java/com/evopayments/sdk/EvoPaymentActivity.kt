@@ -142,43 +142,24 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
     override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {
         lifecycleScope.launch(context = Dispatchers.Default) {
-            val context = this@EvoPaymentActivity
-            val callback = object : EvoPaymentsCallback {
-                override fun onPaymentStarted() {
-                    this@EvoPaymentActivity.onPaymentStarted()
-                }
-
-                override fun onPaymentSuccessful() {
-                    ThreeDSTwoChallengeManager.completionEvent?.let { event ->
-                        runOnUiThread {
-                            getPaymentFragment().provideReactWith3ds2ChallengeResult(
-                                event.sdkTransactionID,
-                                event.transactionStatus
-                            )
-                        }
-                    }
-                }
-
-                override fun onPaymentCancelled() {
-                    this@EvoPaymentActivity.onPaymentCancelled()
-                }
-
-                override fun onPaymentFailed() {
-                    this@EvoPaymentActivity.onPaymentFailed()
-                }
-
-                override fun onPaymentUndetermined() {}
-                override fun handleGPayRequest(request: PaymentDataRequest, environment: GooglePayEnvironment) {}
-                override fun initialize3ds2Engine(initParams: ThreeDSTwoInitializationParams) {}
-                override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {}
-
-            }
-            ThreeDSTwoChallengeManager.startChallenge(challengeParams, callback, context)
+            ThreeDSTwoChallengeManager.startChallenge(
+                context = this@EvoPaymentActivity,
+                requestParams = challengeParams,
+                onCompleted = ::on3ds2ChallengeResult,
+                onFailed = ::onPaymentFailed,
+                onCancelled = ::onPaymentCancelled,
+                onTimedOut = ::onSessionExpired
+            )
         }
     }
 
-    private fun on3ds2ChallengeSuccessful() {
-//        getPaymentFragment().provideReactWith3ds2ChallengeResult()
+    private fun on3ds2ChallengeResult(transactionId: String, challengeStatus: String) {
+        runOnUiThread {
+            getPaymentFragment().provideReactWith3ds2ChallengeResult(
+                transactionId,
+                challengeStatus
+            )
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
