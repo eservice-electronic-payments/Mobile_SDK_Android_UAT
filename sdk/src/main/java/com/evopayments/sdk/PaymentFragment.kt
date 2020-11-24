@@ -22,6 +22,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.concurrent.TimeUnit
 import com.nsoftware.ipworks3ds.sdk.AuthenticationRequestParameters
+import com.squareup.moshi.JsonAdapter
 
 class PaymentFragment : Fragment(), RedirectCallback {
 
@@ -39,8 +40,14 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private val sessionExpiredRunnable by lazy { Runnable(this::onSessionExpired) }
 
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-    private val jsonAdapter = moshi.adapter(PaymentRequest::class.java)
-    private val jsonAdapterChallengeResult = moshi.adapter(ThreeDSTwoChallengeResult::class.java)
+    private val jsonAdapters = mapOf(
+        PaymentRequest::class.java to moshi.adapter(PaymentRequest::class.java),
+        ThreeDSTwoChallengeResult::class.java to moshi.adapter(ThreeDSTwoChallengeResult::class.java),
+        SDKPublicKey::class.java to moshi.adapter(SDKPublicKey::class.java)
+    )
+
+    private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =
+        jsonAdapters[T::class.java] as JsonAdapter<T>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -123,18 +130,18 @@ class PaymentFragment : Fragment(), RedirectCallback {
         val paymentRequest = PaymentRequest(
             transactionId = transactionData.sdkTransactionID,
             deviceData = transactionData.deviceData,
-            publicKey = transactionData.sdkEphemeralPublicKey,
+            publicKey = getJsonAdapter<SDKPublicKey>().fromJson(transactionData.sdkEphemeralPublicKey)!!,
             appId = transactionData.sdkAppID,
             referenceNumber = transactionData.sdkReferenceNumber
         )
-        val paymentRequestJson = jsonAdapter.toJson(paymentRequest)
-        callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
+        val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
+        callMethodOnWebView("continuePayment", paymentRequestJson)
     }
 
     @MainThread
     fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
         val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
-        val finalCResJson = jsonAdapterChallengeResult.toJson(resultObject)
+        val finalCResJson = getJsonAdapter<ThreeDSTwoChallengeResult>().toJson(resultObject)
         callMethodOnWebView("finalize3DS2Payment", finalCResJson)
     }
 
