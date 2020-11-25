@@ -72,7 +72,6 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             transaction = ThreeDS2Service.INSTANCE.createTransaction(initParams.directoryServerId, initParams.messageVersion)
         } catch (ex: Exception) {
             Log.e(logTag, "An exception raised during 3DS2 SDK initialization!", ex)
-//            throw ex // TODO: uncomment?
         }
     }
 
@@ -108,7 +107,6 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             acsRefNumber = requestParams.acsRefNumber
             acsSignedContent = requestParams.acsSignedContent
             set3DSServerTransactionID(requestParams.threeDSTransactionId)
-            // TODO: setThreeDSRequestorAppURL missing
         }
 
         this.callback = Callback(onCompleted, onFailed, onCancelled, onTimedOut)
