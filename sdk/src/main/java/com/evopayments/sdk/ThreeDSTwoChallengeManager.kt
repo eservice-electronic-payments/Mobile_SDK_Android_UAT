@@ -29,17 +29,18 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
                 initParams.dsPublicCertificate,
                 initParams.dsRootCa
             )
-            val directoryServerInfoList = arrayListOf(directoryServerInfo)
-            val clientConfigs = arrayListOf<String>().apply {
+            val directoryServerInfoList = listOf(directoryServerInfo)
+            val clientConfigs = listOf(
                 // Log levels: 0 (None), 1 (Info), 2 (Verbose), 3 (Debug)
-                add("logLevel=3")
+                "logLevel=3",
                 // MaskSensitive setting controls whether sensitive data is masked in the Log event
-                add("MaskSensitive=false")
-            }
-            val deviceParameterBlacklist = arrayListOf<String>().apply {
-                add("A009")
-                add("A010")
-            }
+                "MaskSensitive=false"
+            )
+            // A list of device parameters NOT to pull from the device:
+            val deviceParameterBlacklist = listOf(
+                "A009", // NetworkOperator
+                "A010" // NetworkOperatorName
+            )
             val configParameters = ConfigParameters.Builder(directoryServerInfoList, licenseKey)
                 .clientConfig(clientConfigs)
                 .deviceParameterBlacklist(deviceParameterBlacklist)
@@ -91,7 +92,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * @see #initialize(Context, ThreeDS2InitializationParams)
      */
     fun startChallenge(
-        context: Activity,
+        activity: Activity,
         requestParams: ThreeDSTwoChallengeParams,
         onCompleted: (transactionId: String, challengeStatus: String) -> Unit,
         onFailed: () -> Unit,
@@ -112,7 +113,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
 
         this.callback = Callback(onCompleted, onFailed, onCancelled, onTimedOut)
 
-        transaction.doChallenge(context, challengeParameters, this, 5)
+        transaction.doChallenge(activity, challengeParameters, this, 5)
     }
 
     /**
@@ -131,21 +132,19 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
         callback?.onCancelled?.invoke()
     }
 
-    override fun protocolError(p0: ProtocolErrorEvent?) {
+    override fun protocolError(errorStructure: ProtocolErrorEvent?) {
         callback?.onFailed?.invoke()
     }
 
-    override fun runtimeError(p0: RuntimeErrorEvent?) {
-        // TODO: remove the logging once the data from backend is complete and challenge can be finished:
+    override fun runtimeError(errorStructure: RuntimeErrorEvent?) {
         val errMsg = "3DS2 SDK runtime error!"
-        Log.e(this::class.java.simpleName, errMsg + "\n${p0?.errorMessage}")
+        Log.e(this::class.java.simpleName, errMsg + "\n${errorStructure?.errorMessage}")
         callback?.onFailed?.invoke()
     }
 
-    override fun completed(p0: CompletionEvent?) {
-        checkNotNull(p0)
-        val transactionId = p0.sdkTransactionID
-        val transactionStatus = p0.transactionStatus
+    override fun completed(completionEvent: CompletionEvent) {
+        val transactionId = completionEvent.sdkTransactionID
+        val transactionStatus = completionEvent.transactionStatus
         callback?.onCompleted?.invoke(transactionId, transactionStatus)
     }
 
@@ -153,12 +152,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
         callback?.onTimedOut?.invoke()
     }
 
-//    private class MyClientEventListener : ClientEventListener {
-    override fun fireLog(
-        logLevel: Int,
-        message: String,
-        logType: String
-    ) {
+    override fun fireLog(logLevel: Int, message: String, logType: String) {
         Log.i("ClientLog", "$logType - $message")
     }
 
@@ -181,9 +175,8 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
         status: String,
         accept: BooleanArray
     ) {
-        //accept[0] = true; // todo
+        // no-op
     }
-//    }
 
     private class Callback(
         val onCompleted: (transactionId: String, challengeStatus: String) -> Unit,

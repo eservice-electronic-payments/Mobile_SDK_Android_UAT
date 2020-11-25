@@ -46,14 +46,14 @@ class MainActivity : AppCompatActivity() {
         languageEditText.setText(defaults.getLanguage())
         customerFirstNameEditText.setText(defaults.getCustomerFirstName())
         customerLastNameEditText.setText(defaults.getCustomerLastName())
-        customerAddressStreet.setText(defaults.getCustomerAddressStreet())
-        customerAddressHouseName.setText(defaults.getCustomerAddressHouseName())
-        customerAddressCity.setText(defaults.getCustomerAddressCity())
-        customerAddressPostalCode.setText(defaults.getCustomerAddressPostalCode())
-        customerAddressCountry.setText(defaults.getCustomerAddressCountry())
-        customerAddressState.setText(defaults.getCustomerAddressState())
-        customerPhone.setText(defaults.getCustomerPhone())
-        customerEmail.setText(defaults.getCustomerEmail())
+        customerAddressStreetEditText.setText(defaults.getCustomerAddressStreet())
+        customerAddressHouseNameEditText.setText(defaults.getCustomerAddressHouseName())
+        customerAddressCityEditText.setText(defaults.getCustomerAddressCity())
+        customerAddressPostalCodeEditText.setText(defaults.getCustomerAddressPostalCode())
+        customerAddressCountryEditText.setText(defaults.getCustomerAddressCountry())
+        customerAddressStateEditText.setText(defaults.getCustomerAddressState())
+        customerPhoneEditText.setText(defaults.getCustomerPhone())
+        customerEmailEditText.setText(defaults.getCustomerEmail())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
@@ -78,13 +78,13 @@ class MainActivity : AppCompatActivity() {
             myriadFlowId = myriadFlowId,
             customerFirstName = customerFirstNameEditText.getValue(),
             customerLastName = customerLastNameEditText.getValue(),
-            customerAddressHouseName = customerAddressHouseName.getValue(),
-            customerAddressCity = customerAddressCity.getValue(),
-            customerAddressPostalCode = customerAddressPostalCode.getValue(),
-            customerAddressCountry = customerAddressCountry.getValue(),
-            customerAddressState = customerAddressState.getValue(),
-            customerPhone = customerPhone.getValue(),
-            customerEmail = customerEmail.getValue(),
+            customerAddressHouseName = customerAddressHouseNameEditText.getValue(),
+            customerAddressCity = customerAddressCityEditText.getValue(),
+            customerAddressPostalCode = customerAddressPostalCodeEditText.getValue(),
+            customerAddressCountry = customerAddressCountryEditText.getValue(),
+            customerAddressState = customerAddressStateEditText.getValue(),
+            customerPhone = customerPhoneEditText.getValue(),
+            customerEmail = customerEmailEditText.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
             customParams = customParams
         )

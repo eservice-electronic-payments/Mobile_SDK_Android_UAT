@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,9 +44,6 @@ class PaymentFragment : Fragment(), RedirectCallback {
         ThreeDSTwoChallengeResult::class.java to moshi.adapter(ThreeDSTwoChallengeResult::class.java),
         SDKPublicKey::class.java to moshi.adapter(SDKPublicKey::class.java)
     )
-
-    private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =
-        jsonAdapters[T::class.java] as JsonAdapter<T>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -139,6 +135,9 @@ class PaymentFragment : Fragment(), RedirectCallback {
         webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson', '$messageVersion');") {}
     }
 
+    private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =
+        jsonAdapters[T::class.java] as JsonAdapter<T>
+
     @MainThread
     fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
         val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
@@ -176,9 +175,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         @Keep
         @JavascriptInterface
         fun sendNSoftSdkConfigToMobileApp(data: String) {
-            Log.d(TAG, "sendNSoftSdkConfigToMobileApp") // TODO: debug log
-            val paramsObject = jsonAdapterInitParams.fromJson(data)
-            paramsObject?.let(paymentCallback::initialize3ds2Engine)
+            jsonAdapterInitParams.fromJson(data)?.let(paymentCallback::initialize3ds2Engine)
         }
 
         /**
@@ -187,9 +184,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         @Keep
         @JavascriptInterface
         fun execute3DS2(data: String) {
-            Log.d(TAG, "execute3ds") // TODO: debug log
-            val paramsObject = jsonAdapterChallengeParams.fromJson(data)
-            paramsObject?.let(paymentCallback::start3ds2Challenge)
+            jsonAdapterChallengeParams.fromJson(data)?.let(paymentCallback::start3ds2Challenge)
         }
 
         @Keep

@@ -143,7 +143,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {
         lifecycleScope.launch(context = Dispatchers.Default) {
             ThreeDSTwoChallengeManager.startChallenge(
-                context = this@EvoPaymentActivity,
+                activity = this@EvoPaymentActivity,
                 requestParams = challengeParams,
                 onCompleted = ::on3ds2ChallengeResult,
                 onFailed = ::onPaymentFailed,
