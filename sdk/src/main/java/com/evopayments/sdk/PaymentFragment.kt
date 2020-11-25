@@ -135,7 +135,8 @@ class PaymentFragment : Fragment(), RedirectCallback {
             referenceNumber = transactionData.sdkReferenceNumber
         )
         val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
-        callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
+        val messageVersion = transactionData.messageVersion
+        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson', '$messageVersion');") {}
     }
 
     @MainThread
