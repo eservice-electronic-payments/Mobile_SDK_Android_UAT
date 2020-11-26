@@ -131,11 +131,11 @@ class PaymentFragment : Fragment(), RedirectCallback {
             deviceData = transactionData.deviceData,
             publicKey = sdkEphemeralPublicKeyJson!!,
             appId = transactionData.sdkAppID,
-            referenceNumber = transactionData.sdkReferenceNumber
+            referenceNumber = transactionData.sdkReferenceNumber,
+            protocolVersion = transactionData.messageVersion
         )
         val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
-        val messageVersion = transactionData.messageVersion
-        callMethodOnWebView("continuePayment", paymentRequestJson, messageVersion)
+        callMethodOnWebView("continuePayment", paymentRequestJson)
     }
 
     private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =

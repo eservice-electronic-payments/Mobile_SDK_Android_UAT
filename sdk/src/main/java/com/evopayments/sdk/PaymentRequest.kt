@@ -16,7 +16,10 @@ class PaymentRequest(
     val appId: String,
 
     @Json(name = "SDKReferenceNumber")
-    val referenceNumber: String
+    val referenceNumber: String,
+
+    @Json(name = "SDKProtocolVersion")
+    val protocolVersion: String
 )
 
 class SDKEphemeralPublicKey(
