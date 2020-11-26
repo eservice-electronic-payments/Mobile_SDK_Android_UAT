@@ -4,9 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.wallet.*
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.android.gms.wallet.PaymentDataRequest
+import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.Wallet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun Activity.startEvoPaymentActivityForResult(
     requestCode: Int,
@@ -114,6 +121,47 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         )
     }
 
+    override fun initialize3ds2Engine(initParams: ThreeDSTwoInitializationParams) {
+        lifecycleScope.launch(context = Dispatchers.Default) {
+            val context = this@EvoPaymentActivity
+            try {
+                ThreeDSTwoChallengeManager.initialize(context, initParams)
+                val transactionData = ThreeDSTwoChallengeManager.getAuthenticationRequestParameters()
+                val paymentFragment = getPaymentFragment()
+                runOnUiThread {
+                    paymentFragment.provideReactWithTransactionData(transactionData)
+                }
+            } catch (ex: Exception) {
+                Log.e(TAG, "initialize3ds2Engine", ex)
+            }
+        }
+    }
+
+    private fun getPaymentFragment(): PaymentFragment =
+        supportFragmentManager.findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+
+    override fun start3ds2Challenge(challengeParams: ThreeDSTwoChallengeParams) {
+        lifecycleScope.launch(context = Dispatchers.Default) {
+            ThreeDSTwoChallengeManager.startChallenge(
+                activity = this@EvoPaymentActivity,
+                requestParams = challengeParams,
+                onCompleted = ::on3ds2ChallengeResult,
+                onFailed = ::onPaymentFailed,
+                onCancelled = ::onPaymentCancelled,
+                onTimedOut = ::onSessionExpired
+            )
+        }
+    }
+
+    private fun on3ds2ChallengeResult(transactionId: String, challengeStatus: String) {
+        runOnUiThread {
+            getPaymentFragment().provideReactWith3ds2ChallengeResult(
+                transactionId,
+                challengeStatus
+            )
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -130,8 +178,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     }
 
     private fun onGooglePaymentSuccess(data: Intent?) {
-        val fragment = supportFragmentManager
-            .findFragmentByTag(PaymentFragment.TAG) as PaymentFragment
+        val fragment = getPaymentFragment()
         fragment.onGooglePaymentSuccess(data)
     }
 
@@ -168,6 +215,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         private const val TIMEOUT_IN_MS = "timeout_in_ms"
         private const val IS_PAYMENT_STARTED_EXTRA = "is_payment_started"
         private const val LOAD_PAYMENT_DATA_REQUEST_CODE = 7373
+        private val TAG = EvoPaymentActivity::class.java.simpleName
 
         const val PAYMENT_SUCCESSFUL = 1
         const val PAYMENT_CANCELED = 2

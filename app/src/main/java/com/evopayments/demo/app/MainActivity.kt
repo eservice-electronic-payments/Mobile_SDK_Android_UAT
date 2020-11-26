@@ -2,9 +2,7 @@ package com.evopayments.demo.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebView.setWebContentsDebuggingEnabled
-import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -48,6 +46,14 @@ class MainActivity : AppCompatActivity() {
         languageEditText.setText(defaults.getLanguage())
         customerFirstNameEditText.setText(defaults.getCustomerFirstName())
         customerLastNameEditText.setText(defaults.getCustomerLastName())
+        customerAddressStreetEditText.setText(defaults.getCustomerAddressStreet())
+        customerAddressHouseNameEditText.setText(defaults.getCustomerAddressHouseName())
+        customerAddressCityEditText.setText(defaults.getCustomerAddressCity())
+        customerAddressPostalCodeEditText.setText(defaults.getCustomerAddressPostalCode())
+        customerAddressCountryEditText.setText(defaults.getCustomerAddressCountry())
+        customerAddressStateEditText.setText(defaults.getCustomerAddressState())
+        customerPhoneEditText.setText(defaults.getCustomerPhone())
+        customerEmailEditText.setText(defaults.getCustomerEmail())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
@@ -72,6 +78,13 @@ class MainActivity : AppCompatActivity() {
             myriadFlowId = myriadFlowId,
             customerFirstName = customerFirstNameEditText.getValue(),
             customerLastName = customerLastNameEditText.getValue(),
+            customerAddressHouseName = customerAddressHouseNameEditText.getValue(),
+            customerAddressCity = customerAddressCityEditText.getValue(),
+            customerAddressPostalCode = customerAddressPostalCodeEditText.getValue(),
+            customerAddressCountry = customerAddressCountryEditText.getValue(),
+            customerAddressState = customerAddressStateEditText.getValue(),
+            customerPhone = customerPhoneEditText.getValue(),
+            customerEmail = customerEmailEditText.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
             customParams = customParams
         )

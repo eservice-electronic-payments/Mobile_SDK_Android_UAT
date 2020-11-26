@@ -78,14 +78,70 @@
 			android:hint="@string/customer_last_name"
 			/>
 
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressStreetEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_street"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressHouseNameEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_house_name"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressCityEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_city"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressPostalCodeEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_postal_code"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressCountryEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_country"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerAddressStateEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_address_state"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerPhoneEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_phone"
+			/>
+
+		<androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/customerEmailEditText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/customer_email"
+			/>
+
 		<Button
 			android:id="@+id/startPaymentButton"
 			android:layout_width="match_parent"
 			android:layout_height="80dp"
 			android:layout_gravity="center"
-			android:textColor="@color/white"
 			android:background="@color/colorPrimary"
 			android:text="@string/start_demo"
+			android:textColor="@color/white"
 			/>
 
 		<androidx.appcompat.widget.AppCompatEditText

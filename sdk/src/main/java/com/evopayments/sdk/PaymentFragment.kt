@@ -10,12 +10,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import androidx.annotation.Keep
+import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
 import com.evopayments.sdk.redirect.WebDialogFragment
 import com.google.android.gms.wallet.PaymentDataRequest
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.concurrent.TimeUnit
+import com.nsoftware.ipworks3ds.sdk.AuthenticationRequestParameters
+import com.squareup.moshi.JsonAdapter
 
 class PaymentFragment : Fragment(), RedirectCallback {
 
@@ -31,6 +37,13 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private val timeoutInMs by lazy { arguments!!.getLong(EXTRA_TIMEOUT_IN_MS) }
     private val handler by lazy { Handler() }
     private val sessionExpiredRunnable by lazy { Runnable(this::onSessionExpired) }
+
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private val jsonAdapters = mapOf(
+        PaymentRequest::class.java to moshi.adapter(PaymentRequest::class.java),
+        ThreeDSTwoChallengeResult::class.java to moshi.adapter(ThreeDSTwoChallengeResult::class.java),
+        SDKEphemeralPublicKey::class.java to moshi.adapter(SDKEphemeralPublicKey::class.java)
+    )
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -96,22 +109,60 @@ class PaymentFragment : Fragment(), RedirectCallback {
         val paymentToken = processor.getToken()
 
         if (paymentToken != null) {
-            sendTokenToWebView(paymentToken)
+            callMethodOnWebView("onGPayTokenReceived", paymentToken)
         } else {
             paymentCallback.onPaymentFailed()
         }
     }
 
-    private fun sendTokenToWebView(token: String) {
-        webView.evaluateJavascript("window.JSInterface.onGPayTokenReceived($token);") { /* there's no result */ }
+    private fun callMethodOnWebView(methodName: String, callParameterFirst: String, callParameterSecond: String? = null) {
+        val secondParamInjection = callParameterSecond?.let { ", '$it'" } ?: ""
+        webView.evaluateJavascript("window.JSInterface.$methodName('$callParameterFirst'$secondParamInjection);") {
+            /* there's no result */
+        }
     }
 
+    @MainThread
+    fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
+        val sdkEphemeralPublicKeyJson =
+            getJsonAdapter<SDKEphemeralPublicKey>().fromJson(transactionData.sdkEphemeralPublicKey)
+        val paymentRequest = PaymentRequest(
+            transactionId = transactionData.sdkTransactionID,
+            deviceData = transactionData.deviceData,
+            publicKey = sdkEphemeralPublicKeyJson!!,
+            appId = transactionData.sdkAppID,
+            referenceNumber = transactionData.sdkReferenceNumber,
+            protocolVersion = transactionData.messageVersion
+        )
+        val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
+        callMethodOnWebView("continuePayment", paymentRequestJson)
+    }
+
+    private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =
+        jsonAdapters[T::class.java] as JsonAdapter<T>
+
+    @MainThread
+    fun provideReactWith3ds2ChallengeResult(transactionId: String, transactionStatus: String) {
+        val resultObject = ThreeDSTwoChallengeResult(transactionId, transactionStatus)
+        val finalCResJson = getJsonAdapter<ThreeDSTwoChallengeResult>().toJson(resultObject)
+        callMethodOnWebView("finalize3DS2Payment", finalCResJson)
+    }
+
+    override fun onDestroy() {
+        ThreeDSTwoChallengeManager.cleanUp(requireContext())
+        super.onDestroy()
+    }
+
+    @Keep
     private inner class JSInterface {
         private val handler = Handler(Looper.getMainLooper())
+        private val jsonAdapterInitParams = moshi.adapter(ThreeDSTwoInitializationParams::class.java)
+        private val jsonAdapterChallengeParams = moshi.adapter(ThreeDSTwoChallengeParams::class.java)
 
         /**
          * @param environment It's determined in ReactApp and takes `TEST` or `PRODUCTION`
          */
+        @Keep
         @JavascriptInterface
         fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
@@ -121,6 +172,25 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        /**
+         * @param data It's a serialized object of the `ThreeDSTwoInitializationParams` class
+         */
+        @Keep
+        @JavascriptInterface
+        fun sendNSoftSdkConfigToMobileApp(data: String) {
+            jsonAdapterInitParams.fromJson(data)?.let(paymentCallback::initialize3ds2Engine)
+        }
+
+        /**
+         * @param data It's a serialized object of the `ThreeDSTwoChallengeParams` class
+         */
+        @Keep
+        @JavascriptInterface
+        fun execute3DS2(data: String) {
+            jsonAdapterChallengeParams.fromJson(data)?.let(paymentCallback::start3ds2Challenge)
+        }
+
+        @Keep
         @JavascriptInterface
         fun paymentStarted() {
             handler.post {
@@ -129,6 +199,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentSuccessful() {
             handler.post {
@@ -137,6 +208,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentCancelled() {
             handler.post {
@@ -145,6 +217,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentFailed() {
             handler.post {
@@ -153,6 +226,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun paymentUndetermined() {
             handler.post {
@@ -161,6 +235,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun redirected(url: String) {
             handler.post {
@@ -174,6 +249,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
         @JavascriptInterface
         fun close() {
             handler.post {
