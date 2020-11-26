@@ -11,6 +11,8 @@ import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
 
 private const val LOG_LEVEL_NONE = "0"
 private const val LOG_LEVEL_DEBUG = "3"
+private const val DEVICE_PARAMETER_NETWORK_OPERATOR = "A009"
+private const val DEVICE_PARAMETER_NETWORK_OPERATOR_NAME = "A010"
 private val TAG = ThreeDSTwoChallengeManager::class.java.simpleName
 
 object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
@@ -34,7 +36,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             )
             val directoryServerInfoList = listOf(directoryServerInfo)
             val logLevel = if (BuildConfig.DEBUG) LOG_LEVEL_DEBUG else LOG_LEVEL_NONE
-            val maskSensitive = BuildConfig.DEBUG
+            val maskSensitive = BuildConfig.DEBUG.not()
             val clientConfigs = listOf(
                 // Log levels: 0 (None), 1 (Info), 2 (Verbose), 3 (Debug)
                 "logLevel=$logLevel",
@@ -43,8 +45,8 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             )
             // A list of device parameters NOT to pull from the device:
             val deviceParameterBlacklist = listOf(
-                "A009", // NetworkOperator
-                "A010" // NetworkOperatorName
+                DEVICE_PARAMETER_NETWORK_OPERATOR,
+                DEVICE_PARAMETER_NETWORK_OPERATOR_NAME
             )
             val configParameters = ConfigParameters.Builder(directoryServerInfoList, licenseKey)
                 .clientConfig(clientConfigs)
