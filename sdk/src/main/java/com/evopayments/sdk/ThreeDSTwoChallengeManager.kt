@@ -9,6 +9,10 @@ import com.nsoftware.ipworks3ds.sdk.event.CompletionEvent
 import com.nsoftware.ipworks3ds.sdk.event.ProtocolErrorEvent
 import com.nsoftware.ipworks3ds.sdk.event.RuntimeErrorEvent
 
+private const val LOG_LEVEL_NONE = "0"
+private const val LOG_LEVEL_DEBUG = "3"
+private val TAG = ThreeDSTwoChallengeManager::class.java.simpleName
+
 object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener {
 
     private var transaction: Transaction? = null
@@ -21,7 +25,6 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
      * @see #cleanUp(Context)
      */
     fun initialize(context: Context, initParams: ThreeDSTwoInitializationParams) {
-        val logTag = this::class.java.simpleName
         try {
             val licenseKey = initParams.licenseKeyReversed.reversed()
             val directoryServerInfo = ConfigParameters.DirectoryServerInfo(
@@ -30,11 +33,13 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
                 initParams.dsRootCa
             )
             val directoryServerInfoList = listOf(directoryServerInfo)
+            val logLevel = if (BuildConfig.DEBUG) LOG_LEVEL_DEBUG else LOG_LEVEL_NONE
+            val maskSensitive = BuildConfig.DEBUG
             val clientConfigs = listOf(
                 // Log levels: 0 (None), 1 (Info), 2 (Verbose), 3 (Debug)
-                "logLevel=3",
+                "logLevel=$logLevel",
                 // MaskSensitive setting controls whether sensitive data is masked in the Log event
-                "MaskSensitive=false"
+                "MaskSensitive=$maskSensitive"
             )
             // A list of device parameters NOT to pull from the device:
             val deviceParameterBlacklist = listOf(
@@ -60,18 +65,18 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
                 uiCustomization,
                 this
             ) { severity: SecurityEventListener.Severity, securityEvent: SecurityEventListener.SecurityEvent ->
-                Log.w(logTag, "Security Event captured! severity: $severity, securityEvent: $securityEvent")
+                Log.w(TAG, "Security Event captured! severity: $severity, securityEvent: $securityEvent")
             }
 
             val warnings = ThreeDS2Service.INSTANCE.warnings
             warnings.map { warning ->
-                Log.w(logTag, "WARNING! ${warning.id} ${warning.message}")
+                Log.w(TAG, "WARNING! ${warning.id} ${warning.message}")
                 // abort the checkout if necessary
             }
 
             transaction = ThreeDS2Service.INSTANCE.createTransaction(initParams.directoryServerId, initParams.messageVersion)
         } catch (ex: Exception) {
-            Log.e(logTag, "An exception raised during 3DS2 SDK initialization!", ex)
+            Log.e(TAG, "An exception raised during 3DS2 SDK initialization!", ex)
         }
     }
 
@@ -152,19 +157,19 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
     }
 
     override fun fireLog(logLevel: Int, message: String, logType: String) {
-        Log.i("ClientLog", "$logType - $message")
+        Log.i(TAG, "$logType - $message")
     }
 
     override fun fireDataPacketIn(dataPacket: ByteArray) {
-        Log.i("ClientDataPacketIn", String(dataPacket))
+        Log.i(TAG, String(dataPacket))
     }
 
     override fun fireDataPacketOut(dataPacket: ByteArray) {
-        Log.i("ClientDataPacketOut", String(dataPacket))
+        Log.i(TAG, String(dataPacket))
     }
 
     override fun fireSSLStatus(message: String) {
-        Log.i("ClientSSLStatus", message)
+        Log.i(TAG, message)
     }
 
     override fun fireSSLServerAuthentication(

@@ -132,7 +132,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
                     paymentFragment.provideReactWithTransactionData(transactionData)
                 }
             } catch (ex: Exception) {
-                Log.e(this::class.java.simpleName, "initialize3ds2Engine", ex)
+                Log.e(TAG, "initialize3ds2Engine", ex)
             }
         }
     }
@@ -215,6 +215,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
         private const val TIMEOUT_IN_MS = "timeout_in_ms"
         private const val IS_PAYMENT_STARTED_EXTRA = "is_payment_started"
         private const val LOAD_PAYMENT_DATA_REQUEST_CODE = 7373
+        private val TAG = EvoPaymentActivity::class.java.simpleName
 
         const val PAYMENT_SUCCESSFUL = 1
         const val PAYMENT_CANCELED = 2
