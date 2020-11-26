@@ -42,7 +42,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private val jsonAdapters = mapOf(
         PaymentRequest::class.java to moshi.adapter(PaymentRequest::class.java),
         ThreeDSTwoChallengeResult::class.java to moshi.adapter(ThreeDSTwoChallengeResult::class.java),
-        SDKPublicKey::class.java to moshi.adapter(SDKPublicKey::class.java)
+        SDKEphemeralPublicKey::class.java to moshi.adapter(SDKEphemeralPublicKey::class.java)
     )
 
     override fun onAttach(context: Context) {
@@ -115,24 +115,27 @@ class PaymentFragment : Fragment(), RedirectCallback {
         }
     }
 
-    private fun callMethodOnWebView(methodName: String, callParameter: String) {
-        webView.evaluateJavascript("window.JSInterface.$methodName($callParameter);") {
+    private fun callMethodOnWebView(methodName: String, callParameterFirst: String, callParameterSecond: String? = null) {
+        val secondParamInjection = callParameterSecond?.let { ", '$it'" } ?: ""
+        webView.evaluateJavascript("window.JSInterface.$methodName('$callParameterFirst'$secondParamInjection);") {
             /* there's no result */
         }
     }
 
     @MainThread
     fun provideReactWithTransactionData(transactionData: AuthenticationRequestParameters) {
+        val sdkEphemeralPublicKeyJson =
+            getJsonAdapter<SDKEphemeralPublicKey>().fromJson(transactionData.sdkEphemeralPublicKey)
         val paymentRequest = PaymentRequest(
             transactionId = transactionData.sdkTransactionID,
             deviceData = transactionData.deviceData,
-            publicKey = getJsonAdapter<SDKPublicKey>().fromJson(transactionData.sdkEphemeralPublicKey)!!,
+            publicKey = sdkEphemeralPublicKeyJson!!,
             appId = transactionData.sdkAppID,
             referenceNumber = transactionData.sdkReferenceNumber
         )
         val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
         val messageVersion = transactionData.messageVersion
-        webView.evaluateJavascript("window.JSInterface.continuePayment('$paymentRequestJson', '$messageVersion');") {}
+        callMethodOnWebView("continuePayment", paymentRequestJson, messageVersion)
     }
 
     private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =

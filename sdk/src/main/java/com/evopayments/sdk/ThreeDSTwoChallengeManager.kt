@@ -136,7 +136,8 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
 
     override fun runtimeError(errorStructure: RuntimeErrorEvent?) {
         val errMsg = "3DS2 SDK runtime error!"
-        Log.e(this::class.java.simpleName, errMsg + "\n${errorStructure?.errorMessage}")
+        val logTag = this::class.java.simpleName
+        Log.e(logTag, "$errMsg\n${errorStructure?.errorMessage}")
         callback?.onFailed?.invoke()
     }
 

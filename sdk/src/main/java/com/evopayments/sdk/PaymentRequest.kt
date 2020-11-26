@@ -10,7 +10,7 @@ class PaymentRequest(
     val deviceData: String,
 
     @Json(name = "SDKEphemeralPublicKey")
-    val publicKey: SDKPublicKey,
+    val publicKey: SDKEphemeralPublicKey,
 
     @Json(name = "SDKAppId")
     val appId: String,
@@ -19,7 +19,7 @@ class PaymentRequest(
     val referenceNumber: String
 )
 
-class SDKPublicKey(
+class SDKEphemeralPublicKey(
     @Json(name = "kty")
     val kty: String,
 
