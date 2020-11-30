@@ -115,9 +115,8 @@ class PaymentFragment : Fragment(), RedirectCallback {
         }
     }
 
-    private fun callMethodOnWebView(methodName: String, callParameterFirst: String, callParameterSecond: String? = null) {
-        val secondParamInjection = callParameterSecond?.let { ", '$it'" } ?: ""
-        webView.evaluateJavascript("window.JSInterface.$methodName('$callParameterFirst'$secondParamInjection);") {
+    private fun callMethodOnWebView(methodName: String, callParameter: String) {
+        webView.evaluateJavascript("window.JSInterface.$methodName($callParameter);") {
             /* there's no result */
         }
     }
@@ -135,7 +134,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             protocolVersion = transactionData.messageVersion
         )
         val paymentRequestJson = getJsonAdapter<PaymentRequest>().toJson(paymentRequest)
-        callMethodOnWebView("continuePayment", paymentRequestJson)
+        callMethodOnWebView("continuePayment", "'$paymentRequestJson'")
     }
 
     private inline fun <reified T> getJsonAdapter(): JsonAdapter<T> =
