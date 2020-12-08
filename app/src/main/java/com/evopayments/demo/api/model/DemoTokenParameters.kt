@@ -21,6 +21,7 @@ class DemoTokenParameters(
     customerAddressState: String = "LND",   // ISO code
     customerPhone: String = "",
     customerEmail: String = "",
+    supported3DS2: String = "1",
     userDevice: String = "MOBILE",
     customerIPAddress: String = "",
     customerAccountInfo: String = "",
@@ -49,6 +50,7 @@ class DemoTokenParameters(
         put(CUSTOMER_ADDRESS_STATE, customerAddressState)
         put(CUSTOMER_PHONE, customerPhone)
         put(CUSTOMER_EMAIL, customerEmail)
+        put(THREE_DS_TWO_ENABLED, supported3DS2)
         put(USER_DEVICE, userDevice)
         put(CUSTOMER_IP_ADDRESS, customerIPAddress)
         put(CUSTOMER_ACCOUNT_INFO, customerAccountInfo)
@@ -96,6 +98,8 @@ class DemoTokenParameters(
 
     fun getCustomerEmail() = get(CUSTOMER_EMAIL)
 
+    fun getThreeDSTwoEnabled() = get(THREE_DS_TWO_ENABLED)
+
     companion object {
         private const val CUSTOMER_ID = "customerId"
         private const val CURRENCY = "currency"
@@ -117,6 +121,7 @@ class DemoTokenParameters(
         private const val CUSTOMER_ADDRESS_STATE = "customerAddressState"
         private const val CUSTOMER_PHONE = "customerPhone"
         private const val CUSTOMER_EMAIL = "customerEmail"
+        private const val THREE_DS_TWO_ENABLED = "supported3DS2"
         private const val USER_DEVICE = "userDevice"
         private const val CUSTOMER_IP_ADDRESS = "customerIPAddress"
         private const val CUSTOMER_ACCOUNT_INFO = "customerAccountInfo"
