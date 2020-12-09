@@ -33,5 +33,6 @@
     <string name="customer_address_state">customer address state</string>
     <string name="customer_phone">customer phone</string>
     <string name="customer_email">customer email</string>
+    <string name="three_ds_two_supported">3DS2 supported? (0 / 1)</string>
 	<string name="leave_to_use_server_cfg">leave empty to use server config:</string>
 </resources>

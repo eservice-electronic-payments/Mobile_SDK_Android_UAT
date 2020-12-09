@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         customerAddressStateEditText.setText(defaults.getCustomerAddressState())
         customerPhoneEditText.setText(defaults.getCustomerPhone())
         customerEmailEditText.setText(defaults.getCustomerEmail())
+        threeDSTwoEnabledEditText.setText(defaults.getThreeDSTwoEnabled())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
@@ -85,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             customerAddressState = customerAddressStateEditText.getValue(),
             customerPhone = customerPhoneEditText.getValue(),
             customerEmail = customerEmailEditText.getValue(),
+            supported3DS2 = threeDSTwoEnabledEditText.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
             customParams = customParams
         )
