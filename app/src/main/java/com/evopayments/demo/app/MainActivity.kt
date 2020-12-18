@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.evopayments.demo.BuildConfig
 import com.evopayments.demo.R
 import com.evopayments.demo.api.Communication
 import com.evopayments.demo.api.model.CustomParams
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         myriadFlowId = viewModel.generateFlowId()
         startPaymentButton.setOnClickListener { fetchToken() }
         setDefaults()
+        setVersionNameIndicatorText()
         myriadFlowId = viewModel.generateFlowId()
         setWebContentsDebuggingEnabled(true)
         val entries = resources.getStringArray(R.array.actions)
@@ -58,6 +60,12 @@ class MainActivity : AppCompatActivity() {
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
         merchantNotificationUrl = defaults.getMerchantNotificationUrl()!!
+    }
+
+    private fun setVersionNameIndicatorText() {
+        val versionName = BuildConfig.VERSION_NAME
+        val versionNameFormatted = resources.getString(R.string.app_version_indicator_format, versionName)
+        app_version.text = versionNameFormatted
     }
 
     private fun fetchToken() {
