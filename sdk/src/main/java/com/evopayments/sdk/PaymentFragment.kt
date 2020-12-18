@@ -87,7 +87,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
             .appendQueryParameter(MERCHANT_ID, merchantId)
             .appendQueryParameter(TOKEN, token)
             .appendQueryParameter(MYRIAD_FLOW_ID, myriadFlowId)
-            .appendQueryParameter(THREE_DS2_SUPPORT, 1.toString())
+            .appendQueryParameter(THREE_DS2_SUPPORT, THREE_DS2_SUPPORT_VALUE)
             .build()
             .toString()
     }
@@ -266,6 +266,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         private const val TOKEN = "token"
         private const val MYRIAD_FLOW_ID = "myriadFlowId"
         private const val THREE_DS2_SUPPORT = "supported3DS2"
+        private const val THREE_DS2_SUPPORT_VALUE = "1"
 
         private const val EXTRA_MERCHANT_ID = "extra_merchant_id"
         private const val EXTRA_URL = "extra_cashier_url"
