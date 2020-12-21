@@ -8,7 +8,7 @@
 	>
 
 	<TextView
-		android:id="@+id/app_version"
+		android:id="@+id/appVersionTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="end|bottom"
