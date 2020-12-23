@@ -154,6 +154,13 @@
 				android:hint="@string/customer_email"
 				/>
 
+			<androidx.appcompat.widget.AppCompatEditText
+				android:id="@+id/orderIdEditText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/customer_email"
+				/>
+
 			<Button
 				android:id="@+id/startPaymentButton"
 				android:layout_width="match_parent"

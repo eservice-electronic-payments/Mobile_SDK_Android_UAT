@@ -17,6 +17,7 @@ import com.evopayments.demo.api.model.PaymentDataResponse
 import com.evopayments.sdk.EvoPaymentActivity
 import com.evopayments.sdk.startEvoPaymentActivityForResult
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,16 +57,22 @@ class MainActivity : AppCompatActivity() {
         customerAddressStateEditText.setText(defaults.getCustomerAddressState())
         customerPhoneEditText.setText(defaults.getCustomerPhone())
         customerEmailEditText.setText(defaults.getCustomerEmail())
+        orderIdEditText.setText(generateRandomOrderId())
 
         tokenUrlEditText.setText(Communication.getTokenUrl())
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
         merchantNotificationUrl = defaults.getMerchantNotificationUrl()!!
     }
 
+    private fun generateRandomOrderId(): String {
+        val randomPart = Random.nextLong().toString(16)
+        return ORDER_ID_PREFIX + randomPart.takeLast(ORDER_ID_RANDOM_PART_LENGTH)
+    }
+
     private fun setVersionNameIndicatorText() {
         val versionName = BuildConfig.VERSION_NAME
         val versionNameFormatted = resources.getString(R.string.app_version_indicator_format, versionName)
-        app_version.text = versionNameFormatted
+        appVersionTextView.text = versionNameFormatted
     }
 
     private fun fetchToken() {
@@ -94,6 +101,7 @@ class MainActivity : AppCompatActivity() {
             customerPhone = customerPhoneEditText.getValue(),
             customerEmail = customerEmailEditText.getValue(),
             merchantNotificationUrl = merchantNotificationUrl,
+            merchantTxId = orderIdEditText.getValue(),
             customParams = customParams
         )
 
@@ -130,6 +138,7 @@ class MainActivity : AppCompatActivity() {
                 EvoPaymentActivity.PAYMENT_UNDETERMINED    -> onPaymentUndetermined()
                 EvoPaymentActivity.PAYMENT_SESSION_EXPIRED -> onSessionExpired()
             }
+            orderIdEditText.setText(generateRandomOrderId())
         }
     }
 
@@ -163,5 +172,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val EVO_PAYMENT_REQUEST_CODE = 1000
+        private const val ORDER_ID_PREFIX = "sdk-"
+        private const val ORDER_ID_RANDOM_PART_LENGTH = 10
     }
 }

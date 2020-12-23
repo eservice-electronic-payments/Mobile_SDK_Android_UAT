@@ -21,6 +21,7 @@ class DemoTokenParameters(
     customerAddressState: String = "LND",   // ISO code
     customerPhone: String = "",
     customerEmail: String = "",
+    merchantTxId: String = "",
     userDevice: String = "MOBILE",
     customerIPAddress: String = "",
     customerAccountInfo: String = "",
@@ -53,6 +54,7 @@ class DemoTokenParameters(
         put(CUSTOMER_IP_ADDRESS, customerIPAddress)
         put(CUSTOMER_ACCOUNT_INFO, customerAccountInfo)
         put(MERCHANT_AUTH_INFO, merchantAuthInfo)
+        put(ORDER_ID, merchantTxId)
         putAll(customParams.hashMap)
     }
 
@@ -121,5 +123,6 @@ class DemoTokenParameters(
         private const val CUSTOMER_IP_ADDRESS = "customerIPAddress"
         private const val CUSTOMER_ACCOUNT_INFO = "customerAccountInfo"
         private const val MERCHANT_AUTH_INFO = "merchantAuthInfo"
+        private const val ORDER_ID = "merchantTxId"
     }
 }
