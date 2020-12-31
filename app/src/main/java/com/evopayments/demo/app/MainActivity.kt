@@ -14,52 +14,55 @@ import com.evopayments.demo.api.Communication
 import com.evopayments.demo.api.model.CustomParams
 import com.evopayments.demo.api.model.DemoTokenParameters
 import com.evopayments.demo.api.model.PaymentDataResponse
+import com.evopayments.demo.databinding.ActivityMainBinding
 import com.evopayments.sdk.EvoPaymentActivity
 import com.evopayments.sdk.startEvoPaymentActivityForResult
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
-    private var merchantId: String = ""
+    private lateinit var binding: ActivityMainBinding
     private lateinit var myriadFlowId: String
     private lateinit var merchantLandingPageUrl: String
     private lateinit var merchantNotificationUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         myriadFlowId = viewModel.generateFlowId()
-        startPaymentButton.setOnClickListener { fetchToken() }
+        binding.startPaymentButton.setOnClickListener { fetchToken() }
         setDefaults()
         setVersionNameIndicatorText()
         myriadFlowId = viewModel.generateFlowId()
         setWebContentsDebuggingEnabled(true)
         val entries = resources.getStringArray(R.array.actions)
-        actionSpinner.onItemSelectedListener = SpinnerListener(entries, amountEditText)
+        binding.actionSpinner.onItemSelectedListener =
+            SpinnerListener(entries, binding.amountEditText)
     }
 
     private fun setDefaults() {
         val defaults = DemoTokenParameters()
-        customerIdEditText.setText(defaults.getCustomerId())
-        currencyEditText.setText(defaults.getCurrency())
-        countryEditText.setText(defaults.getCountry())
-        amountEditText.setText(defaults.getAmount())
-        languageEditText.setText(defaults.getLanguage())
-        customerFirstNameEditText.setText(defaults.getCustomerFirstName())
-        customerLastNameEditText.setText(defaults.getCustomerLastName())
-        customerAddressStreetEditText.setText(defaults.getCustomerAddressStreet())
-        customerAddressHouseNameEditText.setText(defaults.getCustomerAddressHouseName())
-        customerAddressCityEditText.setText(defaults.getCustomerAddressCity())
-        customerAddressPostalCodeEditText.setText(defaults.getCustomerAddressPostalCode())
-        customerAddressCountryEditText.setText(defaults.getCustomerAddressCountry())
-        customerAddressStateEditText.setText(defaults.getCustomerAddressState())
-        customerPhoneEditText.setText(defaults.getCustomerPhone())
-        customerEmailEditText.setText(defaults.getCustomerEmail())
-        orderIdEditText.setText(generateRandomOrderId())
-
-        tokenUrlEditText.setText(Communication.getTokenUrl())
+        with(binding) {
+            customerIdEditText.setText(defaults.getCustomerId())
+            currencyEditText.setText(defaults.getCurrency())
+            countryEditText.setText(defaults.getCountry())
+            amountEditText.setText(defaults.getAmount())
+            languageEditText.setText(defaults.getLanguage())
+            customerFirstNameEditText.setText(defaults.getCustomerFirstName())
+            customerLastNameEditText.setText(defaults.getCustomerLastName())
+            customerAddressStreetEditText.setText(defaults.getCustomerAddressStreet())
+            customerAddressHouseNameEditText.setText(defaults.getCustomerAddressHouseName())
+            customerAddressCityEditText.setText(defaults.getCustomerAddressCity())
+            customerAddressPostalCodeEditText.setText(defaults.getCustomerAddressPostalCode())
+            customerAddressCountryEditText.setText(defaults.getCustomerAddressCountry())
+            customerAddressStateEditText.setText(defaults.getCustomerAddressState())
+            customerPhoneEditText.setText(defaults.getCustomerPhone())
+            customerEmailEditText.setText(defaults.getCustomerEmail())
+            orderIdEditText.setText(generateRandomOrderId())
+            tokenUrlEditText.setText(Communication.tokenUrl)
+        }
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
         merchantNotificationUrl = defaults.getMerchantNotificationUrl()!!
     }
@@ -71,8 +74,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setVersionNameIndicatorText() {
         val versionName = BuildConfig.VERSION_NAME
-        val versionNameFormatted = resources.getString(R.string.app_version_indicator_format, versionName)
-        appVersionTextView.text = versionNameFormatted
+        val versionNameFormatted =
+            resources.getString(R.string.app_version_indicator_format, versionName)
+        binding.appVersionTextView.text = versionNameFormatted
     }
 
     private fun fetchToken() {
@@ -82,31 +86,34 @@ class MainActivity : AppCompatActivity() {
             "Custom Param Value 3",
             "Custom Param Value 4")
 
-        val tokenParams = DemoTokenParameters(
-            customerId = customerIdEditText.getValue(),
-            currency = currencyEditText.getValue(),
-            country = countryEditText.getValue(),
-            amount = amountEditText.getValue(),
-            action = actionSpinner.selectedItem.toString(),
-            language = languageEditText.getValue(),
-            merchantLandingPageUrl = merchantLandingPageUrl,
-            myriadFlowId = myriadFlowId,
-            customerFirstName = customerFirstNameEditText.getValue(),
-            customerLastName = customerLastNameEditText.getValue(),
-            customerAddressHouseName = customerAddressHouseNameEditText.getValue(),
-            customerAddressCity = customerAddressCityEditText.getValue(),
-            customerAddressPostalCode = customerAddressPostalCodeEditText.getValue(),
-            customerAddressCountry = customerAddressCountryEditText.getValue(),
-            customerAddressState = customerAddressStateEditText.getValue(),
-            customerPhone = customerPhoneEditText.getValue(),
-            customerEmail = customerEmailEditText.getValue(),
-            merchantNotificationUrl = merchantNotificationUrl,
-            merchantTxId = orderIdEditText.getValue(),
-            customParams = customParams
-        )
+        val tokenParams = with(binding) {
+            DemoTokenParameters(
+                customerId = customerIdEditText.getValue(),
+                currency = currencyEditText.getValue(),
+                country = countryEditText.getValue(),
+                amount = amountEditText.getValue(),
+                action = actionSpinner.selectedItem.toString(),
+                language = languageEditText.getValue(),
+                merchantLandingPageUrl = merchantLandingPageUrl,
+                myriadFlowId = myriadFlowId,
+                customerFirstName = customerFirstNameEditText.getValue(),
+                customerLastName = customerLastNameEditText.getValue(),
+                customerAddressHouseName = customerAddressHouseNameEditText.getValue(),
+                customerAddressCity = customerAddressCityEditText.getValue(),
+                customerAddressPostalCode = customerAddressPostalCodeEditText.getValue(),
+                customerAddressCountry = customerAddressCountryEditText.getValue(),
+                customerAddressState = customerAddressStateEditText.getValue(),
+                customerPhone = customerPhoneEditText.getValue(),
+                customerEmail = customerEmailEditText.getValue(),
+                merchantNotificationUrl = merchantNotificationUrl,
+                merchantTxId = orderIdEditText.getValue(),
+                customParams = customParams
+            )
+        }
+        val tokenUrl = binding.tokenUrlEditText.getValue()
 
         viewModel.fetchToken(
-            tokenUrlEditText.getValue(),
+            tokenUrl,
             tokenParams,
             this::startPaymentProcess,
             this::onError
@@ -118,10 +125,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
-        this.merchantId = data.merchantId!!
+        requireNotNull(data.merchantId)
         startEvoPaymentActivityForResult(
             EVO_PAYMENT_REQUEST_CODE,
-            merchantId,
+            data.merchantId,
             data.mobileCashierUrl,
             data.token,
             myriadFlowId
@@ -138,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                 EvoPaymentActivity.PAYMENT_UNDETERMINED    -> onPaymentUndetermined()
                 EvoPaymentActivity.PAYMENT_SESSION_EXPIRED -> onSessionExpired()
             }
-            orderIdEditText.setText(generateRandomOrderId())
+            binding.orderIdEditText.setText(generateRandomOrderId())
         }
     }
 

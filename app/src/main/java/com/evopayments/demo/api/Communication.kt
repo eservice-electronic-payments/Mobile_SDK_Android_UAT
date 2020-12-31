@@ -14,7 +14,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 object Communication {
 
     private const val DEFAULT_URL = "https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/"
-    private var tokenUrl = ""
+    var tokenUrl = ""
+        private set
 
     lateinit var apiService: ApiService
 
@@ -37,9 +38,5 @@ object Communication {
             .build()
 
         apiService = retrofit.create(ApiService::class.java)
-    }
-
-    fun getTokenUrl():String {
-        return tokenUrl
     }
 }
