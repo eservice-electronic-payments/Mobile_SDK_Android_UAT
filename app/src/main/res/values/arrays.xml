@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions">
+        <item>AUTH</item>
+        <item>PURCHASE</item>
+        <item>VERIFY</item>
+    </string-array>
+</resources>

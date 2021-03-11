@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+repositories {
+    flatDir {
+        dirs project(':sdk').file('libs')
+    }
+}
+
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        applicationId "com.evopayments.demo"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 3
+        versionName "1.2"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+ext {
+    retrofitVersion = '2.9.0'
+}
+
+dependencies {
+    // Modules
+    implementation project(":sdk")
+    //implementation 'com.github.intelligentpayments:androidSDK:0.3.0'
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Android X
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    // Jetpack
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7'
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    // OkHttp
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
+
+    // Tests
+    testImplementation 'junit:junit:4.12'
+}

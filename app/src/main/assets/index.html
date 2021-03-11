@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <title>JSCommunicator</title>
+    <meta name="viewport" content="width=device-width">
+</head>
+<style>
+
+div {
+  color: white;
+  width: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  resize: both;
+  overflow: auto;
+}
+
+div button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+</style>
+<body>
+
+    <div>
+        <button onclick="interface.paymentSuccessful();">Simulate successful payment</button>
+        <button onclick="interface.paymentCancelled();">Simulate cancelled payment</button>
+        <button onclick="interface.paymentFailed();">Simulate failed payment</button>
+    </div>
+
+<script>
+        var interface;
+        if(window.webkit) {
+            interface = {
+                paymentSuccessful: () => {
+                    window.webkit.messageHandlers.JSInterface.postMessage("success");
+                },
+                paymentCancelled: () => {
+                    window.webkit.messageHandlers.JSInterface.postMessage("cancelled");
+                },
+                paymentFailed: () => {
+                    window.webkit.messageHandlers.JSInterface.postMessage("failed");
+                }
+            };
+        } else if(window.JSInterface) {
+            interface = JSInterface;
+        }
+
+</script>
+</body>
+
+</html>

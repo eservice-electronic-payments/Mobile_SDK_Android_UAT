@@ -1,0 +1,16 @@
+<manifest
+	package="com.evopayments.evocashierlib"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+
+	<application>
+
+		<activity android:name="com.evopayments.sdk.EvoPaymentActivity"
+			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+			/>
+
+		<meta-data
+			android:name="com.google.android.gms.wallet.api.enabled"
+			android:value="true" />
+	</application>
+</manifest>
