@@ -1,3 +1,7 @@
+## Pre-condition
+
+Please note that the call from the Merchant Server to the IPG Gateway API for obtaining an IPG Gateway “Session Token” has been updated. (This update is due to additional data fields mandated by 3DS-Version 2 compliance). It is a prerequisite that the Session Token passed to the Mobile SDK is obtained from that updated Get Session Token API endpoint.
+
 ## Installation
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
@@ -26,6 +30,15 @@ Remember, path must pointing to `sdk` folder inside cloned SDK.
 ```groovy
 implementation project(":sdk")
 ```
+It is also required to include an additional artifacts directory by including the following in the app-level build.gradle file:
+```groovy
+repositories {
+    flatDir {
+        dirs project(':sdk').file('libs')
+    }
+}
+```
+
 
 ## Usage
 
@@ -45,14 +58,21 @@ class DemoTokenParameters(  //example values
     merchantLandingPageUrl: String, //"https://ptsv2.com/t/ipgmobilesdktest"
     language: String,               //"en"
     myriadFlowId: String,
-    customerFirstName: String,      //"Jan"
-    customerLastName: String,       //"Mobile"
-    merchantNotificationUrl: String //"https://ptsv2.com/t/66i1s-1534805666/post
+    customerFirstName: String,		//"Jan"
+    customerLastName: String,		//"Mobile"
+    merchantNotificationUrl: String	//"https://ptsv2.com/t/66i1s-1534805666/post
+    customerAddressStreet: String	// "Abbey Rd"
+    customerAddressHouseName: String	// "1"
+    customerAddressCity: String		// "London" (full city name)
+    customerAddressPostalCode		// "NW6 4DN"
+    customerAddressCountry: String,	// "GB" (ISO country code)
+    customerAddressState: String,	// "LND" (ISO state code)
+    customerPhone: String,		// Mandatory (for the 3DS2), unless not available
+    customerEmail: String,		// Mandatory (for the 3DS2), unless not available
+    customerIPAddress: String,		// Mandatory (for the 3DS2), unless not available
 )
 ```
-For more information check `fetchToken()` method in `MainActivity.kt`.
-​
-​
+For more information check `fetchToken()` method in `MainActivity.kt`. ​
 
 2. Then to display web page via SDK, call this method from your activity:
 ​
