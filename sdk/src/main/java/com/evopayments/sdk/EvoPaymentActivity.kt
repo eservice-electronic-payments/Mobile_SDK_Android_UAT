@@ -38,15 +38,12 @@ fun Activity.startEvoPaymentActivityForResult(
 
 class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissListener {
 
-    private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID) }
-    private val mobileCashierUrl by lazy { intent.getStringExtra(MOBILE_CASHIER_URL) }
-    private val token by lazy { intent.getStringExtra(TOKEN) }
-    private val myriadFlowId by lazy { intent.getStringExtra(MYRIAD_FLOW_ID) }
+    private val merchantId by lazy { intent.getStringExtra(MERCHANT_ID)!! }
+    private val mobileCashierUrl by lazy { intent.getStringExtra(MOBILE_CASHIER_URL)!! }
+    private val token by lazy { intent.getStringExtra(TOKEN)!! }
+    private val myriadFlowId by lazy { intent.getStringExtra(MYRIAD_FLOW_ID)!! }
     private val timeoutInMs by lazy {
-        intent.getLongExtra(
-            TIMEOUT_IN_MS,
-            PaymentFragment.DEFAULT_TIMEOUT
-        )
+        intent.getLongExtra(TIMEOUT_IN_MS, PaymentFragment.DEFAULT_TIMEOUT)
     }
 
     private var isPaymentStarted: Boolean = false
