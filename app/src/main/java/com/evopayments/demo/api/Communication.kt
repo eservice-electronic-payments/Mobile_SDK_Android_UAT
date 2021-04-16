@@ -13,7 +13,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 object Communication {
 
-    private const val DEFAULT_URL = "https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/"
+    private const val DEFAULT_URL = "https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/"
+
     var tokenUrl = ""
         private set
 
