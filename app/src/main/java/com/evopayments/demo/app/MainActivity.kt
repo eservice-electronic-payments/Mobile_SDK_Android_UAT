@@ -84,7 +84,8 @@ class MainActivity : AppCompatActivity() {
             "Custom Param Value 1",
             "Custom Param Value 2",
             "Custom Param Value 3",
-            "Custom Param Value 4")
+            "Custom Param Value 4",
+        )
 
         val tokenParams = with(binding) {
             DemoTokenParameters(
@@ -120,9 +121,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun EditText.getValue(): String {
-        return text.toString()
-    }
+    private fun EditText.getValue(): String = text.toString()
 
     private fun startPaymentProcess(data: PaymentDataResponse) {
         requireNotNull(data.merchantId)

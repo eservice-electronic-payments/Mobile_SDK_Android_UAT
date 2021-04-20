@@ -48,14 +48,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
 
     private var isPaymentStarted: Boolean = false
 
-    private fun getPaymentClient(environment: Int): PaymentsClient {
-        return Wallet.getPaymentsClient(
+    private fun getPaymentClient(environment: Int): PaymentsClient =
+        Wallet.getPaymentsClient(
             this,
             Wallet.WalletOptions.Builder()
                 .setEnvironment(environment)
                 .build()
         )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setFlags(
@@ -111,11 +110,13 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
     }
 
     override fun handleGPayRequest(request: PaymentDataRequest, environment: GooglePayEnvironment) {
-        AutoResolveHelper.resolveTask(
-            getPaymentClient(environment.code).loadPaymentData(request),
-            this,
-            LOAD_PAYMENT_DATA_REQUEST_CODE
-        )
+        runOnUiThread {
+            AutoResolveHelper.resolveTask(
+                getPaymentClient(environment.code).loadPaymentData(request),
+                this,
+                LOAD_PAYMENT_DATA_REQUEST_CODE
+            )
+        }
     }
 
     override fun initialize3ds2Engine(initParams: ThreeDSTwoInitializationParams) {
@@ -123,7 +124,8 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
             val context = this@EvoPaymentActivity
             try {
                 ThreeDSTwoChallengeManager.initialize(context, initParams)
-                val transactionData = ThreeDSTwoChallengeManager.getAuthenticationRequestParameters()
+                val transactionData =
+                    ThreeDSTwoChallengeManager.getAuthenticationRequestParameters()
                 val paymentFragment = getPaymentFragment()
                 runOnUiThread {
                     paymentFragment.provideReactWithTransactionData(transactionData)
