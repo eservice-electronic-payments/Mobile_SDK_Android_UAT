@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.evopayments.demo.BuildConfig
 import com.evopayments.demo.R
-import com.evopayments.demo.api.Communication
 import com.evopayments.demo.api.model.CustomParams
 import com.evopayments.demo.api.model.DemoTokenParameters
 import com.evopayments.demo.api.model.PaymentDataResponse
@@ -61,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             customerPhoneEditText.setText(defaults.getCustomerPhone())
             customerEmailEditText.setText(defaults.getCustomerEmail())
             orderIdEditText.setText(generateRandomOrderId())
-            tokenUrlEditText.setText(Communication.tokenUrl)
         }
         merchantLandingPageUrl = defaults.getMerchantLandingPageUrl()!!
         merchantNotificationUrl = defaults.getMerchantNotificationUrl()!!
@@ -111,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 customParams = customParams
             )
         }
-        val tokenUrl = binding.tokenUrlEditText.getValue()
+        val tokenUrl:String = binding.tokenUrlSpinner.selectedItem.toString()
 
         viewModel.fetchToken(
             tokenUrl,

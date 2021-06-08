@@ -5,4 +5,13 @@
         <item>PURCHASE</item>
         <item>VERIFY</item>
     </string-array>
+    <string-array name="mssUrls">
+        <item value="https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/">Responsive Dev MSS URL</item>
+        <item value="https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/">Turnkey QA MSS URL</item>
+        <item value="https://merchant-simulator-server-turnkeyuat.test.boipapaymentgateway.com/">Turnkey UAT MSS URL</item>
+        <item value="https://merchant-simulator-server-evopolanduat.test.intelligent-payments.com/">EvoPoland UAT MSS URL</item>
+        <item value="https://merchant-simulator-server-universalpayuat.test.myriadpayments.com/">UniversalPay UAT MSS URL</item>
+        <item value="https://merchant-api.secure.eservice.com.pl/">Turnkey PRE PROD MSS URL</item>
+        <item value="https://cashier-api.secure.eservice.com.pl/">Turnkey PROD MSS URL</item>
+    </string-array>
 </resources>
