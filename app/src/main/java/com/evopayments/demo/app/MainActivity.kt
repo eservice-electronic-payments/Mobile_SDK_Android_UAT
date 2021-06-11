@@ -2,9 +2,10 @@ package com.evopayments.demo.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView.setWebContentsDebuggingEnabled
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -12,11 +13,13 @@ import com.evopayments.demo.BuildConfig
 import com.evopayments.demo.R
 import com.evopayments.demo.api.model.CustomParams
 import com.evopayments.demo.api.model.DemoTokenParameters
+import com.evopayments.demo.api.model.MssUrl
 import com.evopayments.demo.api.model.PaymentDataResponse
 import com.evopayments.demo.databinding.ActivityMainBinding
 import com.evopayments.sdk.EvoPaymentActivity
 import com.evopayments.sdk.startEvoPaymentActivityForResult
 import kotlin.random.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +42,29 @@ class MainActivity : AppCompatActivity() {
         val entries = resources.getStringArray(R.array.actions)
         binding.actionSpinner.onItemSelectedListener =
             SpinnerListener(entries, binding.amountEditText)
+
+        val mssUrls = ArrayList<MssUrl>();
+        mssUrls.add(MssUrl("Responsive Dev MSS URL", "https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/"))
+        mssUrls.add(MssUrl("Turnkey QA MSS URL", "https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/"))
+        mssUrls.add(MssUrl("Turnkey UAT MSS URL", "https://merchant-simulator-server-turnkeyuat.test.boipapaymentgateway.com/"))
+
+        val mssUrlsAdapter = ArrayAdapter(this, R.layout.spinner, mssUrls);
+        val userSpinner = findViewById<View>(R.id.mssUrlSpinnerId) as Spinner
+        userSpinner.adapter = mssUrlsAdapter
+        userSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                // Get the value selected by the user
+                // e.g. to store it as a field or immediately call a method
+                val user: MssUrl = parent.selectedItem as MssUrl
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun setDefaults() {
@@ -109,10 +135,10 @@ class MainActivity : AppCompatActivity() {
                 customParams = customParams
             )
         }
-        val tokenUrl:String = binding.tokenUrlSpinner.selectedItem.toString()
+        val tokenUrl:MssUrl = binding.tokenUrlSpinner.selectedItem as MssUrl
 
         viewModel.fetchToken(
-            tokenUrl,
+            tokenUrl.getUrl(),
             tokenParams,
             this::startPaymentProcess,
             this::onError
