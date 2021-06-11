@@ -4,5 +4,4 @@
 	android:layout_height="wrap_content"
 	android:padding="10dp"
 	android:textSize="14sp"
-	android:textColor="#FFFFFF"
 	android:spinnerMode="dialog" />

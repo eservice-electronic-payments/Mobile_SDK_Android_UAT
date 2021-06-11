@@ -42,14 +42,12 @@ class MainActivity : AppCompatActivity() {
         val entries = resources.getStringArray(R.array.actions)
         binding.actionSpinner.onItemSelectedListener =
             SpinnerListener(entries, binding.amountEditText)
+        handleMssUrlSpinner()
+    }
 
-        val mssUrls = ArrayList<MssUrl>();
-        mssUrls.add(MssUrl("Responsive Dev MSS URL", "https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/"))
-        mssUrls.add(MssUrl("Turnkey QA MSS URL", "https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/"))
-        mssUrls.add(MssUrl("Turnkey UAT MSS URL", "https://merchant-simulator-server-turnkeyuat.test.boipapaymentgateway.com/"))
-
-        val mssUrlsAdapter = ArrayAdapter(this, R.layout.spinner, mssUrls);
-        val userSpinner = findViewById<View>(R.id.mssUrlSpinnerId) as Spinner
+    private fun handleMssUrlSpinner() {
+        val mssUrlsAdapter = ArrayAdapter(this, R.layout.spinner, initMssUrls());
+        val userSpinner = findViewById<View>(R.id.tokenUrlSpinner) as Spinner
         userSpinner.adapter = mssUrlsAdapter
         userSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
@@ -58,13 +56,44 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                // Get the value selected by the user
-                // e.g. to store it as a field or immediately call a method
-                val user: MssUrl = parent.selectedItem as MssUrl
+                parent.selectedItem as MssUrl
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun initMssUrls(): List<MssUrl> {
+        return listOf(
+            MssUrl(
+                "https://merchant-simulator-server-responsivedev.test.intelligent-payments.com/",
+                "Responsive Dev MSS URL"
+            ),
+            MssUrl(
+                "https://merchant-simulator-server-turnkeyqa.test.intelligent-payments.com/",
+                "Turnkey QA MSS URL"
+            ),
+            MssUrl(
+                "https://merchant-simulator-server-turnkeyuat.test.boipapaymentgateway.com/",
+                "Turnkey UAT MSS URL"
+            ),
+            MssUrl(
+                "https://merchant-simulator-server-evopolanduat.test.intelligent-payments.com/",
+                "EvoPoland UAT MSS URL"
+            ),
+            MssUrl(
+                "https://merchant-simulator-server-universalpayuat.test.myriadpayments.com/",
+                "UniversalPay UAT MSS URL"
+            ),
+            MssUrl(
+                "https://merchant-api.secure.eservice.com.pl/",
+                "Turnkey PRE PROD MSS URL"
+            ),
+            MssUrl(
+                "https://cashier-api.secure.eservice.com.pl/",
+                "Turnkey/EvoPoland PROD MSS URL"
+            )
+        )
     }
 
     private fun setDefaults() {
@@ -135,10 +164,10 @@ class MainActivity : AppCompatActivity() {
                 customParams = customParams
             )
         }
-        val tokenUrl:MssUrl = binding.tokenUrlSpinner.selectedItem as MssUrl
+        val tokenUrl: MssUrl = binding.tokenUrlSpinner.selectedItem as MssUrl
 
         viewModel.fetchToken(
-            tokenUrl.getUrl(),
+            tokenUrl.url,
             tokenParams,
             this::startPaymentProcess,
             this::onError
