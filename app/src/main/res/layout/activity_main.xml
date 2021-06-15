@@ -171,11 +171,10 @@
 				android:textColor="@color/white"
 				/>
 
-			<androidx.appcompat.widget.AppCompatEditText
-				android:id="@+id/tokenUrlEditText"
+			<Spinner
+				android:id="@+id/tokenUrlSpinner"
+				android:layout_height="80dp"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:hint="@string/token_url"
 				/>
 
 			<androidx.appcompat.widget.AppCompatTextView
