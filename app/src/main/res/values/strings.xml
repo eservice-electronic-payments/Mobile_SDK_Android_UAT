@@ -1,6 +1,39 @@
 <resources>
-    <string name="app_name">ipg</string>
-    <string name="start_payment_process">Start payment process</string>
+    <string name="app_name">EvoPayments Demo</string>
+    <string name="app_version_indicator_format">v%s</string>
+    <string name="start_demo">Start Demo</string>
     <string name="payment_successful">Payment successful</string>
     <string name="payment_failed">Payment failed</string>
+    <string name="payment_cancelled">Payment cancelled</string>
+    <string name="failed_starting_payment_process">Failed starting payment process</string>
+    <string name="session_expired">Session expired</string>
+    <string name="missing_merchant_id">missing merchantId</string>
+    <string name="merchant_id">merchant id</string>
+    <string name="merchant_password">merchant password</string>
+    <string name="customer_id">customer id</string>
+    <string name="amount">amount</string>
+    <string name="currency_code">currency code</string>
+    <string name="country_code">country code</string>
+    <string name="show_test">Show web UI test screen</string>
+    <string name="redirection_requested">redirection requested</string>
+    <string name="close_requested">Closing redir window requested</string>
+    <string name="token_url">token provider URL</string>
+    <string name="mobile_cashier_url">Mobile cashier URL</string>
+    <string name="payment_result_undetermined">We could not confirm the result of the transaction. Please contact the
+        merchant.
+    </string>
+    <string name="payment_started">The payment process has started</string>
+    <string name="language_code">language code</string>
+    <string name="customer_first_name">customer first name</string>
+    <string name="customer_last_name">customer last name</string>
+    <string name="customer_address_house_name">customer address house name</string>
+    <string name="customer_address_street">customer address street</string>
+    <string name="customer_address_city">customer address city</string>
+    <string name="customer_address_postal_code">customer address postal code</string>
+    <string name="customer_address_country">customer address country</string>
+    <string name="customer_address_state">customer address state</string>
+    <string name="customer_phone">customer phone</string>
+    <string name="customer_email">customer email</string>
+    <string name="order_id">order ID</string>
+	<string name="leave_to_use_server_cfg">leave empty to use server config:</string>
 </resources>
