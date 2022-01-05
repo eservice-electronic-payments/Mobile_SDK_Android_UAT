@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 afterEvaluate {
     generateReleaseBuildConfig.enabled = false
 }
@@ -17,8 +11,6 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "0.6.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -42,5 +34,5 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
     // 3DS v2.0.7722
-    implementation(name: 'ipworks3ds_sdk', ext: 'aar')
+    implementation project(":nsoft-libs")
 }

@@ -1,20 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-repositories {
-    flatDir {
-        dirs project(':sdk').file('libs')
-    }
-}
-
 android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.evopayments.demo"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -39,7 +33,6 @@ ext {
 dependencies {
     // Modules
     implementation project(":sdk")
-    //implementation 'com.github.intelligentpayments:androidSDK:0.3.0'
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Android X

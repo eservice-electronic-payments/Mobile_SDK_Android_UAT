@@ -3,6 +3,9 @@
 Please note that the call from the Merchant Server to the IPG Gateway API for obtaining an IPG Gateway “Session Token” has been updated. (This update is due to additional data fields mandated by 3DS-Version 2 compliance). It is a prerequisite that the Session Token passed to the Mobile SDK is obtained from that updated Get Session Token API endpoint.
 
 ## Installation
+
+#### Manually (Recommended)
+
 1. Clone this project or download zip file with source code, by clicking green button in top right corner:
 
 ![Download Button](readMeImages/cloneOrDownload.PNG)
@@ -17,28 +20,34 @@ All available version you can find [here](https://github.com/intelligentpayments
 
 4. Open your project in Android Studio.
 5. Open file `settings.gradle` - it is in your project's root directory
-6. Add these lines in file:
+6. Add this line in file:
 
 ```groovy
-include ':sdk'
-project(':sdk').projectDir = new File('C:\\Users\\Praca\\StudioProjects\\androidSDK\\sdk') // Example path
+include ':sdk', ':nsoft-libs'
 ```
-Replace path in `new File(...)` with path to cloned/downloaded SDK.
-Remember, path must pointing to `sdk` folder inside cloned SDK.
-
-7. In app-level build.gradle file add the dependency​:
+7. In app-level build.gradle file add the dependency:
 ```groovy
 implementation project(":sdk")
 ```
-It is also required to include an additional artifacts directory by including the following in the app-level build.gradle file:
-```groovy
-repositories {
-    flatDir {
-        dirs project(':sdk').file('libs')
-    }
-}
-```
 
+#### JitPack (Not Recommended)
+
+1. Add the JitPack repository in your root build.gradle at the end of repositories:
+
+   	allprojects {
+   		repositories {
+   			...
+   			maven { url 'https://jitpack.io' }
+   		}
+   	}
+
+2. Add the dependency of mobile sdk via Repo and Tag:
+
+   	dependencies {
+   		implementation 'com.github.eservice-electronic-payments:<repo>:<tag>'
+   	}
+
+   Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT` or `Mobile_SDK_Android`; `<tag>` is the version of SDK you want to use. e.g. ```implementation 'com.github.eservice-electronic-payments:Mobile_SDK_Android_UAT:2.0.4'```
 
 ## Usage
 
