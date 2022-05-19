@@ -17,11 +17,11 @@ import androidx.fragment.app.FragmentManager
 import com.evopayments.sdk.redirect.RedirectCallback
 import com.evopayments.sdk.redirect.WebDialogFragment
 import com.google.android.gms.wallet.PaymentDataRequest
+import com.nsoftware.ipworks3ds.sdk.AuthenticationRequestParameters
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.concurrent.TimeUnit
-import com.nsoftware.ipworks3ds.sdk.AuthenticationRequestParameters
-import com.squareup.moshi.JsonAdapter
 
 class PaymentFragment : Fragment(), RedirectCallback {
 
@@ -35,7 +35,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private var redirectDialogFragment: WebDialogFragment? = null
 
     private val timeoutInMs by lazy { arguments!!.getLong(EXTRA_TIMEOUT_IN_MS) }
-    private val handler by lazy { Handler() }
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
     private val sessionExpiredRunnable by lazy { Runnable(this::onSessionExpired) }
 
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
@@ -172,6 +172,15 @@ class PaymentFragment : Fragment(), RedirectCallback {
             }
         }
 
+        @Keep
+        @JavascriptInterface
+        fun paymentStarted() {
+            handler.post {
+                paymentCallback.onPaymentStarted()
+                fragmentManager?.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
+        }
+
         /**
          * @param data It's a serialized object of the `ThreeDSTwoInitializationParams` class
          */
@@ -188,15 +197,6 @@ class PaymentFragment : Fragment(), RedirectCallback {
         @JavascriptInterface
         fun execute3DS2(data: String) {
             jsonAdapterChallengeParams.fromJson(data)?.let(paymentCallback::start3ds2Challenge)
-        }
-
-        @Keep
-        @JavascriptInterface
-        fun paymentStarted() {
-            handler.post {
-                paymentCallback.onPaymentStarted()
-                fragmentManager?.popBackStack(TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            }
         }
 
         @Keep

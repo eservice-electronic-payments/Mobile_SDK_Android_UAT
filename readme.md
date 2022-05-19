@@ -16,7 +16,7 @@ Please note that the call from the Merchant Server to the IPG Gateway API for ob
 git checkout <version>
 ```
 Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`.
-All available version you can find [here](https://github.com/eservice-electronic-payments/Mobile_SDK_Android_UAT/releases)
+All available version you can find [here](https://github.com/intelligentpayments/androidSDK/releases)
 
 4. Open your project in Android Studio.
 5. Open file `settings.gradle` - it is in your project's root directory

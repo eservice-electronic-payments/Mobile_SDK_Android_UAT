@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 4
-        versionName "2.0"
+        versionCode 5
+        versionName "2.1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -26,15 +26,12 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.gms:play-services-wallet:18.1.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.activity:activity-ktx:1.2.2'
+    implementation 'com.google.android.gms:play-services-wallet:18.1.3'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.activity:activity-ktx:1.3.1'
     // Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
-    // Required for the /n software 3-D Secure V2 SDK to compile
-    implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    // 3DS v2.0.7722
+    // 3DS v2.2.8070
     implementation project(":nsoft-libs")
 }

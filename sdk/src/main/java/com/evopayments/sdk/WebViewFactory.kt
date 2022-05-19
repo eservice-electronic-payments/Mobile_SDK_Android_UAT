@@ -1,10 +1,12 @@
 package com.evopayments.sdk
 
 import android.content.Context
+import android.os.Build
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 
 /**
  * Created by Maciej Kozłowski on 2019-09-10.
@@ -26,13 +28,17 @@ internal object WebViewFactory {
     }
 
     private class PaymentWebViewClient(private val onError: () -> Unit) : WebViewClient() {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onReceivedError(
             view: WebView?,
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
             super.onReceivedError(view, request, error)
-            onError()
+            // only handle error from site starts with 'cashierui'
+            if (request?.url?.host?.startsWith("cashierui") == true) {
+                onError()
+            }
         }
     }
 
