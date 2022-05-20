@@ -47,6 +47,7 @@ dependencies {
     // Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.google.android.material:material:1.6.0'
     // 3DS v2.2.8070
     // implementation project(":nsoft-libs")
     embed project(path: ':nsoft-libs', configuration: 'default')
