@@ -8,13 +8,13 @@ afterEvaluate {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 5
-        versionName "2.1.0"
+        targetSdkVersion 31
+        versionCode 6
+        versionName "2.1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -32,9 +32,9 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.eservice-electronic-payments'
-                artifactId = 'Mobile_SDK_Android_UAT'
-                version = '0.0.0.3'
+                groupId = 'com.evopayments.sdk'
+                artifactId = 'uat'
+                version = '2.1.1'
             }
         }
     }
