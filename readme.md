@@ -16,38 +16,43 @@ Please note that the call from the Merchant Server to the IPG Gateway API for ob
 git checkout <version>
 ```
 Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`.
-All available version you can find [here](https://github.com/intelligentpayments/androidSDK/releases)
+All available version you can find [here](https://github.com/eservice-electronic-payments/Mobile_SDK_Android_UAT/releases)
 
 4. Open your project in Android Studio.
-5. Open file `settings.gradle` - it is in your project's root directory
-6. Add this line in file:
-
+5. Open file `settings.gradle` - it is in your project's root directory and add this line:
 ```groovy
 include ':sdk', ':nsoft-libs'
 ```
-7. In app-level build.gradle file add the dependency:
+6. In app-level build.gradle file add the dependency:
 ```groovy
 implementation project(":sdk")
 ```
+7. Open file `build.gradle` in sdk module:
+   1. uncomment this line: `// implementation project(":nsoft-libs")`
+   2. comment this line: `embed project(path: ':nsoft-libs', configuration: 'default')`
 
 #### JitPack (Not Recommended)
 
 1. Add the JitPack repository in your root build.gradle at the end of repositories:
 
-   	allprojects {
-   		repositories {
-   			...
-   			maven { url 'https://jitpack.io' }
-   		}
-   	}
-
+```groovy
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
 2. Add the dependency of mobile sdk via Repo and Tag:
 
-   	dependencies {
-   		implementation 'com.github.eservice-electronic-payments:<repo>:<tag>'
-   	}
+```groovy
+dependencies {
+   	implementation 'com.github.eservice-electronic-payments:<repo>:<tag>'
+}
+```
 
-   Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT` or `Mobile_SDK_Android`; `<tag>` is the version of SDK you want to use. e.g. ```implementation 'com.github.eservice-electronic-payments:Mobile_SDK_Android_UAT:2.0.4'```
+Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the version of SDK you want to use. Here is an example: 
+```implementation 'com.github.eservice-electronic-payments:Mobile_SDK_Android_UAT:2.0.4'```
 
 ## Usage
 
