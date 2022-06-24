@@ -27,9 +27,28 @@ include ':sdk', ':nsoft-libs'
 ```groovy
 implementation project(":sdk")
 ```
-7. Open file `build.gradle` in sdk module:
-   1. uncomment this line: `// implementation project(":nsoft-libs")`
-   2. comment this line: `embed project(path: ':nsoft-libs', configuration: 'default')`
+7. Make sure the integration mode is switched from **JitPack**(default) to **Manually**, open file `build.gradle` in sdk module: 
+   1. comment out these two plugins: 
+      1. `apply plugin: 'maven-publish'` 
+      2. `apply plugin: 'com.kezong.fat-aar'`
+   2. comment out this `afterEvaluate` block:
+      ```groovy
+       afterEvaluate {
+           publishing {
+               publications {
+                   release(MavenPublication) {
+                       from components.release
+                       groupId = 'com.evopayments.sdk'
+                       artifactId = 'uat'
+                       version = '2.1.1'
+                   }
+               }
+          }
+       }
+      ```
+   3. comment out this line: `embed project(path: ':nsoft-libs', configuration: 'default')`
+   4. uncomment this line: `// implementation project(":nsoft-libs")`
+
 
 #### JitPack (Not Recommended)
 
@@ -58,7 +77,7 @@ Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the 
 
 1. To use Android SDK it's necessary to fetch mobile cashier url and token from API:
 ​
-In our example, in repository we use `Communication.kt` to obtain session token.
+We use http get method to obtain session token.
 Below is a Payload model used in request:
 ​
 ```kotlin
@@ -69,26 +88,25 @@ class DemoTokenParameters(  //example values
     amount: String,         //"2.00"
     action: String,         //"AUTH"
     allowOriginUrl: String, //"http://example.com"
-    merchantLandingPageUrl: String, //"https://ptsv2.com/t/ipgmobilesdktest"
-    language: String,               //"en"
+    merchantLandingPageUrl: String,
+    language: String,       //"en"
     myriadFlowId: String,
-    customerFirstName: String,		//"Jan"
-    customerLastName: String,		//"Mobile"
-    merchantNotificationUrl: String	//"https://ptsv2.com/t/66i1s-1534805666/post
-    customerAddressStreet: String	// "Abbey Rd"
-    customerAddressHouseName: String	// "1"
-    customerAddressCity: String		// "London" (full city name)
-    customerAddressPostalCode		// "NW6 4DN"
-    customerAddressCountry: String,	// "GB" (ISO country code)
-    customerAddressState: String,	// "LND" (ISO state code)
-    customerPhone: String,		// Mandatory (for the 3DS2), unless not available
-    customerEmail: String,		// Mandatory (for the 3DS2), unless not available
-    customerIPAddress: String,		// Mandatory (for the 3DS2), unless not available
+    customerFirstName: String, // Jan
+    customerLastName: String,  // Mobile
+    merchantNotificationUrl: String,
+    customerAddressStreet: String,
+    customerAddressHouseName: String,
+    customerAddressCity: String,
+    customerAddressPostalCode: String,
+    customerAddressCountry: String, // ISO code
+    customerAddressState: String,	// ISO code
+    customerPhone: String,
+    customerEmail: String,
+    customerIPAddress: String,
 )
 ```
-For more information check `fetchToken()` method in `MainActivity.kt`. ​
 
-2. Then to display web page via SDK, call this method from your activity:
+2. Once the cashier url and token are retrieved, call this method from your activity to display web page via SDK:
 ​
 
 **Kotlin**
