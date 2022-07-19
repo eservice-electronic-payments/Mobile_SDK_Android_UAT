@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('ipworks3ds_sdk_deploy.aar'))
+artifacts.add("default", file('ipworks3ds_sdk.aar'))

@@ -27,7 +27,7 @@ include ':sdk', ':nsoft-libs'
 ```groovy
 implementation project(":sdk")
 ```
-7. Make sure the integration mode is switched from **JitPack**(default) to **Manually**, open file `build.gradle` in sdk module: 
+7. Make sure the integration mode is switched from **JitPack**(default) to **Manually**, open file `build.gradle` in `sdk` module: 
    1. comment out these two plugins: 
       1. `apply plugin: 'maven-publish'` 
       2. `apply plugin: 'com.kezong.fat-aar'`
@@ -49,24 +49,23 @@ implementation project(":sdk")
    3. comment out this line: `embed project(path: ':nsoft-libs', configuration: 'default')`
    4. uncomment this line: `// implementation project(":nsoft-libs")`
 
-
-#### JitPack (Not Recommended)
+#### JitPack (Not Recommended, Only for Test Purpose)
 
 1. Add the JitPack repository in your root build.gradle at the end of repositories:
 
 ```groovy
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
 ```
 2. Add the dependency of mobile sdk via Repo and Tag:
 
 ```groovy
 dependencies {
-   	implementation 'com.github.eservice-electronic-payments:<repo>:<tag>'
+       implementation 'com.github.eservice-electronic-payments:<repo>:<tag>'
 }
 ```
 
@@ -77,32 +76,33 @@ Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the 
 
 1. To use Android SDK it's necessary to fetch mobile cashier url and token from API:
 ​
-We use http get method to obtain session token.
-Below is a Payload model used in request:
+We use http get method to obtain session token. Below is a Payload model used in request:
 ​
 ```kotlin
 class DemoTokenParameters(  //example values
-    customerId: String,     //"lovelyrita"
-    currency: String,       //"PLN"
-    country: String,        //"PL"
-    amount: String,         //"2.00"
-    action: String,         //"AUTH"
-    allowOriginUrl: String, //"http://example.com"
-    merchantLandingPageUrl: String,
-    language: String,       //"en"
-    myriadFlowId: String,
-    customerFirstName: String, // Jan
-    customerLastName: String,  // Mobile
-    merchantNotificationUrl: String,
-    customerAddressStreet: String,
-    customerAddressHouseName: String,
-    customerAddressCity: String,
-    customerAddressPostalCode: String,
-    customerAddressCountry: String, // ISO code
-    customerAddressState: String,	// ISO code
-    customerPhone: String,
-    customerEmail: String,
-    customerIPAddress: String,
+   action: String,                     // "AUTH"
+   customerId: String,                 // "lovelyrita"
+   currency: String,                   // "PLN"
+   country: String,                    // "PL"
+   amount: String,                     // "2.00"
+   language: String,                   // "en"
+   myriadFlowId: String,
+   customerFirstName: String,          // "Jan"
+   customerLastName: String,           // "Mobile"
+   customerAddressStreet: String,      // "Abbey Rd"
+   customerAddressHouseName: String,   // "1"
+   customerAddressCity: String,        // "London" (full city name)
+   customerAddressPostalCode: String,  // "NW6 4DN"
+   customerAddressCountry: String,     // "GB" (ISO country code)
+   customerAddressState: String,       // "LND" (ISO state code)
+   customerPhone: String,              // Mandatory (for the 3DS2), unless not available
+   customerEmail: String,              // Mandatory (for the 3DS2), unless not available
+   customerIPAddress: String,          // Mandatory (for the 3DS2), unless not available
+   merchantLandingPageUrl: String,     // "https://example.com" (FQDN)
+   merchantNotificationUrl: String,    // "https://example.com" (FQDN)
+   allowOriginUrl: String,             // "https://example.com" (FQDN)
+   merchantDecMaximumWaitTime: String, // integer minute, e.g. 5
+   merchantDecIndicator: String,       // "Y", "N" or ""(empty)
 )
 ```
 
@@ -114,11 +114,11 @@ class DemoTokenParameters(  //example values
 class YourActivity: Activity() {
     fun startPayment() {
         startEvoPaymentActivityForResult(
-        	EVO_PAYMENT_REQUEST_CODE,
-	        merchantId,
-	        mobileCashierUrl,
-	        token,
-	        myriadFlowId
+            EVO_PAYMENT_REQUEST_CODE,
+            merchantId,
+            mobileCashierUrl,
+            token,
+            myriadFlowId
         )
     }
 }
@@ -195,3 +195,20 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
+
+## Version of 3ds library: debug vs deploy
+There are two versions of the 3DS SDK included: 
+1. **ipworks3ds_sdk.aar** for development (*default*)
+2. **ipworks3ds_sdk_deploy.aar** for production or release
+The production version includes more strict security measures that would not allow for common development processes to occur, including running with attached debuggers or using simulators/emulators.
+Please make sure the production version is used in `build.gradle` of `nsoft-libs` module when publish to app store(e.g. Google Play):
+```groovy
+artifacts.add("default", file('ipworks3ds_sdk_deploy.aar'))
+```
+
+## How to test with deploy version integrated
+To test the app with deploy version integrated, there are 2 options:
+1. Open **Run/Debug Configuration** in Android Studio as image below, and set **Install Flags**: `-i com.android.vending`
+   ![Run/Debug Configurations](readMeImages/run-debug-configurations.PNG)
+2. Run command below under directory where your release apk is located:
+   `adb install -i "com.android.vending" -r app-release.apk` 
