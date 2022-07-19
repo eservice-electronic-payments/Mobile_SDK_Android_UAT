@@ -21,7 +21,7 @@ internal class WebDialogFragment : DialogFragment() {
     private var onDismissCallback: OnDismissListener? = null
 
     private val webView by lazy {
-        WebViewFactory.createWebView(context!!, null, this::onWebViewError)
+        WebViewFactory.createWebView(requireContext(), null, this::onWebViewError)
     }
 
     override fun onAttach(context: Context) {
@@ -38,13 +38,13 @@ internal class WebDialogFragment : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return webView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val url = arguments!!.getString(EXTRA_URL)!!
+        val url = requireArguments().getString(EXTRA_URL)!!
         webView.loadUrl(url)
     }
 

@@ -29,12 +29,12 @@ class PaymentFragment : Fragment(), RedirectCallback {
     private var onDismissCallback: OnDismissListener? = null
 
     private val webView by lazy {
-        WebViewFactory.createWebView(context!!, JSInterface(), this::onWebViewError)
+        WebViewFactory.createWebView(requireContext(), JSInterface(), this::onWebViewError)
     }
 
     private var redirectDialogFragment: WebDialogFragment? = null
 
-    private val timeoutInMs by lazy { arguments!!.getLong(EXTRA_TIMEOUT_IN_MS) }
+    private val timeoutInMs by lazy { requireArguments().getLong(EXTRA_TIMEOUT_IN_MS) }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
     private val sessionExpiredRunnable by lazy { Runnable(this::onSessionExpired) }
 
@@ -55,17 +55,17 @@ class PaymentFragment : Fragment(), RedirectCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return webView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val merchantId = arguments!!.getString(EXTRA_MERCHANT_ID)!!
-        val baseUrl = arguments!!.getString(EXTRA_URL)!!
-        val token = arguments!!.getString(EXTRA_TOKEN)!!
-        val myriadFlowId = arguments!!.getString(MYRIAD_FLOW_ID)!!
+        val merchantId = requireArguments().getString(EXTRA_MERCHANT_ID)!!
+        val baseUrl = requireArguments().getString(EXTRA_URL)!!
+        val token = requireArguments().getString(EXTRA_TOKEN)!!
+        val myriadFlowId = requireArguments().getString(MYRIAD_FLOW_ID)!!
 
         val url = createUrl(baseUrl, merchantId, token, myriadFlowId)
         webView.loadUrl(url)
@@ -167,9 +167,7 @@ class PaymentFragment : Fragment(), RedirectCallback {
         fun processGPayPayment(paymentDataRequest: String, environment: String) {
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
             val gPayEnvironment = GooglePayEnvironment.valueOf(environment)
-            if (request != null) {
-                paymentCallback.handleGPayRequest(request, gPayEnvironment)
-            }
+            paymentCallback.handleGPayRequest(request, gPayEnvironment)
         }
 
         @Keep
