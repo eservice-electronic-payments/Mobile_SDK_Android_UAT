@@ -17,37 +17,22 @@ git checkout <version>
 ```
 Where `<version>` is version of SDK you want to use, e.g. `git checkout 1.0`.
 All available version you can find [here](https://github.com/eservice-electronic-payments/Mobile_SDK_Android_UAT/releases)
-
 4. Open your project in Android Studio.
-5. Open file `settings.gradle` - it is in your project's root directory and add this line:
+5. Open file `settings.gradle` - it is in your project's root directory
+6. Add this line in file:
 ```groovy
-include ':sdk', ':nsoft-libs'
+include ':sdk'
 ```
-6. In app-level build.gradle file add the dependency:
+7. In app-level build.gradle file add the repository and dependency:
 ```groovy
+repositories {
+    flatDir {
+        dirs project(':sdk').file('libs')
+    }
+}
+
 implementation project(":sdk")
-```
-7. Make sure the integration mode is switched from **JitPack**(default) to **Manually**, open file `build.gradle` in `sdk` module: 
-   1. comment out these two plugins: 
-      1. `apply plugin: 'maven-publish'` 
-      2. `apply plugin: 'com.kezong.fat-aar'`
-   2. comment out this `afterEvaluate` block:
-      ```groovy
-       afterEvaluate {
-           publishing {
-               publications {
-                   release(MavenPublication) {
-                       from components.release
-                       groupId = 'com.evopayments.sdk'
-                       artifactId = 'uat'
-                       version = '2.1.1'
-                   }
-               }
-          }
-       }
-      ```
-   3. comment out this line: `embed project(path: ':nsoft-libs', configuration: 'default')`
-   4. uncomment this line: `// implementation project(":nsoft-libs")`
+``` 
 
 #### JitPack (Not Recommended, Only for Test Purpose)
 
@@ -69,8 +54,8 @@ dependencies {
 }
 ```
 
-Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the version of SDK you want to use. Here is an example: 
-```implementation 'com.github.eservice-electronic-payments:Mobile_SDK_Android_UAT:2.0.4'```
+Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the version of SDK you want to use, prepend with `jp-`. Here is an example: 
+```implementation 'com.github.eservice-electronic-payments:Mobile_SDK_Android_UAT:jp-2.0.4'```
 
 ## Usage
 
@@ -79,7 +64,7 @@ Where `<repo>` is the repository name: `Mobile_SDK_Android_UAT`; `<tag>` is the 
 We use http get method to obtain session token. Below is a Payload model used in request:
 ​
 ```kotlin
-class DemoTokenParameters(  //example values
+class DemoTokenParameters(             //example values
    action: String,                     // "AUTH"
    customerId: String,                 // "lovelyrita"
    currency: String,                   // "PLN"
@@ -201,9 +186,9 @@ There are two versions of the 3DS SDK included:
 1. **ipworks3ds_sdk.aar** for development (*default*)
 2. **ipworks3ds_sdk_deploy.aar** for production or release
 The production version includes more strict security measures that would not allow for common development processes to occur, including running with attached debuggers or using simulators/emulators.
-Please make sure the production version is used in `build.gradle` of `nsoft-libs` module when publish to app store(e.g. Google Play):
+Please make sure the production version is used in `build.gradle` of `sdk` module when publish to app store(e.g. Google Play):
 ```groovy
-artifacts.add("default", file('ipworks3ds_sdk_deploy.aar'))
+implementation(name: 'ipworks3ds_sdk_deploy', ext: 'aar')
 ```
 
 ## How to test with deploy version integrated
