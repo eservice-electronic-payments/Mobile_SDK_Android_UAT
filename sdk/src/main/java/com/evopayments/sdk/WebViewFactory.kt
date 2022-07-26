@@ -1,12 +1,7 @@
 package com.evopayments.sdk
 
 import android.content.Context
-import android.os.Build
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
+import android.webkit.*
 
 /**
  * Created by Maciej Kozłowski on 2019-09-10.
@@ -28,7 +23,6 @@ internal object WebViewFactory {
     }
 
     private class PaymentWebViewClient(private val onError: () -> Unit) : WebViewClient() {
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onReceivedError(
             view: WebView?,
             request: WebResourceRequest?,
