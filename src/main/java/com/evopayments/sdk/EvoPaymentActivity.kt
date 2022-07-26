@@ -146,7 +146,7 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
                 requestParams = challengeParams,
                 onCompleted = ::on3ds2ChallengeResult,
                 onFailed = ::onPaymentFailed,
-                onCancelled = ::onPaymentCancelled,
+                onCancelled = ::on3ds2ChallengeCancelled,
                 onTimedOut = ::onSessionExpired
             )
         }
@@ -159,6 +159,11 @@ class EvoPaymentActivity : AppCompatActivity(), EvoPaymentsCallback, OnDismissLi
                 challengeStatus
             )
         }
+    }
+
+    private fun on3ds2ChallengeCancelled() {
+        on3ds2ChallengeResult("", "")
+        finishWithResult(PAYMENT_CANCELED)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
