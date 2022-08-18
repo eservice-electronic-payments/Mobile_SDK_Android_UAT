@@ -46,6 +46,20 @@ allprojects {
     }
 }
 ```
+
+or maybe in setting.gradle at the end of repositories if your gradle config is different from the default:
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        ...
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+rootProject.name = "yourProjectName"
+include ':app'
+```
+
 2. Add the dependency of mobile sdk via Repo and Tag:
 
 ```groovy
@@ -96,6 +110,8 @@ class DemoTokenParameters(             //example values
 
 **Kotlin**
 ```kotlin
+import com.evopayments.sdk.startEvoPaymentActivityForResult
+
 class YourActivity: Activity() {
     fun startPayment() {
         startEvoPaymentActivityForResult(
@@ -110,6 +126,8 @@ class YourActivity: Activity() {
 ```
 or if you use **Java**:
 ```java
+import com.evopayments.sdk.EvoPaymentActivityKt;
+        
 public class YourActivity extends Activity {
     private void startPayment() {
         EvoPaymentActivityKt.startEvoPaymentActivityForResult(
@@ -118,7 +136,8 @@ public class YourActivity extends Activity {
             merchantId,
             mobileCashierUrl,
             token,
-            myriadFlowId
+            myriadFlowId,
+            null // default timeout: 10 min    
         );
     }
 }
@@ -140,6 +159,8 @@ Sample implementation of `onActivityResult(...)` can looks like this:
 
 **Kotlin**
 ```kotlin
+import com.evopayments.sdk.EvoPaymentActivity
+
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == EVO_PAYMENT_REQUEST_CODE) {
@@ -156,6 +177,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 ​
 **Java**
 ```java
+import com.evopayments.sdk.EvoPaymentActivity
+        
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
