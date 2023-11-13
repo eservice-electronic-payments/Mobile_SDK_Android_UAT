@@ -39,6 +39,7 @@ internal class WebDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        webView.settings.domStorageEnabled = true
         return webView
     }
 
