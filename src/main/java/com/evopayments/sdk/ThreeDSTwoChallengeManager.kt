@@ -31,6 +31,7 @@ object ThreeDSTwoChallengeManager : ChallengeStatusReceiver, ClientEventListener
             val licenseKey = initParams.licenseKeyReversed.reversed()
             val directoryServerInfo = ConfigParameters.DirectoryServerInfo(
                 initParams.directoryServerId,
+                "",
                 initParams.dsPublicCertificate,
                 initParams.dsRootCa
             )
